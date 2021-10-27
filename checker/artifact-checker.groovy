@@ -155,7 +155,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.zip", "jdk.txt")
-                                            addResult("WindowsCheckSumValidate", true, pkg)
+                                            addResult("WindowsCheckSumValidate", true, pkg_name)
                                             echo "text on windows check PASS"
                                             sh "rm -rf jdk.txt jdk.zip"
                                         }
@@ -193,7 +193,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
-                                            addResult("LinuxX64CheckSumValidate", true, pkg)
+                                            addResult("LinuxX64CheckSumValidate", true, pkg_name)
                                             echo "text on x64_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
@@ -239,7 +239,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
-                                            addResult("LinuxAarch64CheckSumValidate", true, pkg)
+                                            addResult("LinuxAarch64CheckSumValidate", true, pkg_name)
                                             echo "text on aarch64_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
