@@ -197,7 +197,7 @@ pipeline {
                                             echo "text on x64_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
-                                            sh "tar zxmf jdk.tar.gz"
+                                            sh "tar xf jdk.tar.gz"
                                             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
                                             def check_dirname = java_home.contains(publishtag)
                                             if (check_dirname == false) {
@@ -289,7 +289,7 @@ pipeline {
                                             echo "text on x64_apline_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
-                                            sh "tar zxmf jdk.tar.gz"
+                                            sh "tar xf jdk.tar.gz"
                                             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
                                             def check_dirname = java_home.contains(publishtag)
                                             if (check_dirname == false) {
