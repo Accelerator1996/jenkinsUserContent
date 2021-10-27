@@ -312,7 +312,7 @@ pipeline {
             }
             steps {
                 script {
-                    writeFile file: 'release.json', text: results.toPrettyString()
+                    writeFile file: 'release.json', text: groovy.json.JsonOutput.toJson(results)
                 }
             }
             post {
