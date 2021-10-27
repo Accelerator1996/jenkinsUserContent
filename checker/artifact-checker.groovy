@@ -1,4 +1,6 @@
 import net.sf.json.groovy.JsonSlurper
+import groovy.json.*
+
 
 def pkgs = []
 @groovy.transform.Field def githubtag = ""
@@ -11,6 +13,16 @@ if ("${params.RELEASE}" == "17") {
 }
 @groovy.transform.Field def pkg_list = []
 @groovy.transform.Field def txt_list = []
+
+def results = [:]
+
+
+def addResult(test, result, msg) {
+    results["${test}"] = [
+        "result" : true,
+        "message" : msg
+    ]
+}
 
 def checkName(name) {
     def tag = githubtag.split( "dragonwell-")[1].split("_jdk")[0]
@@ -52,9 +64,12 @@ def releaseDisplay(release) {
             echo "${name} is invalid package name"
             return []
         }
+        addResult("checkGithubReleaseArtifactsName", true, name)
     }
     if (pkg_list.size() != platforms.size() || txt_list.size() != platforms.size()) {
         error "missing publish package/text"
+    } else {
+        addResult("checkGithubRleaseArtifactsSum", true, platforms.size())
     }
    return assets
 }
@@ -140,6 +155,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.zip", "jdk.txt")
+                                            addResult("WindowsCheckSumValidate", true, pkg)
                                             echo "text on windows check PASS"
                                             sh "rm -rf jdk.txt jdk.zip"
                                         }
@@ -177,6 +193,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
+                                            addResult("LinuxX64CheckSumValidate", true, pkg)
                                             echo "text on x64_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
@@ -211,7 +228,7 @@ pipeline {
                                         if ("${suffix}" == "gz") suffix = "tar.gz"
                                         sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O jdk.${suffix}"
                                         if ("${suffix}" == "zip") {
-                                            sh "unzip jdk.zip"
+                                            sh "unzip -q jdk.zip"
                                             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
                                             def check_dirname = java_home.contains(publishtag)
                                             if (check_dirname == false) {
@@ -222,10 +239,11 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
+                                            addResult("LinuxAarch64CheckSumValidate", true, pkg)
                                             echo "text on aarch64_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
-                                            sh "tar zxmf jdk.tar.gz"
+                                            sh "tar xf jdk.tar.gz"
                                             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
                                             def check_dirname = java_home.contains(publishtag)
                                             if (check_dirname == false) {
@@ -267,6 +285,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
+                                            addResult("LinuxX64AlpineCheckSumValidate", true, pkg)
                                             echo "text on x64_apline_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
@@ -283,6 +302,19 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        stage('result') {
+            steps {
+                script {
+                    writeFile file: 'release.json', text: results.toPrettyString()
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: "release.json"
                 }
             }
         }
