@@ -14,7 +14,7 @@ if ("${params.RELEASE}" == "17") {
 @groovy.transform.Field def pkg_list = []
 @groovy.transform.Field def txt_list = []
 
-def results = [:]
+@groovy.transform.Field def results = [:]
 
 
 def addResult(test, result, msg) {
