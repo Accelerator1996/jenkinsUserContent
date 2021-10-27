@@ -307,6 +307,9 @@ pipeline {
         }
 
         stage('result') {
+            agent {
+                label "linux&&x64"
+            }
             steps {
                 script {
                     writeFile file: 'release.json', text: results.toPrettyString()
