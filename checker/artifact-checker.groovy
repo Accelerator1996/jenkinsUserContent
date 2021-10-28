@@ -315,9 +315,6 @@ pipeline {
                     writeFile file: 'release.json', text: groovy.json.JsonOutput.toJson(results)
                     sh "rm -rf reports || true"
                     sh "wget -q https://github.com/dragonwell-releng/jenkinsUserContent/blob/master/checker/htmlReporter.py -O htmlReporter.py"
-                    sh "apt-get update"
-                    sh "apt install python-pip"
-                    sh "pip install html-testRunner"
                     sh "python htmlReporter.py"
                 }
             }
