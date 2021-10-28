@@ -285,7 +285,7 @@ pipeline {
                                             sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             validateFile("jdk.tar.gz", "jdk.txt")
-                                            addResult("LinuxX64AlpineCheckSumValidate", true, pkg)
+                                            addResult("LinuxX64AlpineCheckSumValidate", true, pkg_name)
                                             echo "text on x64_apline_linux check PASS"
                                             sh "rm -rf jdk.txt jdk.tar.gz"
                                         } else if ("${suffix}" == "tar.gz") {
