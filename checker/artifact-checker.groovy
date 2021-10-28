@@ -308,7 +308,7 @@ pipeline {
 
         stage('result') {
             agent {
-                label "linux&&x64"
+                label "artifact.checker"
             }
             steps {
                 script {
