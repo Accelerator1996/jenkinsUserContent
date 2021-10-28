@@ -314,7 +314,7 @@ pipeline {
                 script {
                     writeFile file: 'release.json', text: groovy.json.JsonOutput.toJson(results)
                     sh "rm -rf reports || true"
-                    sh "wget -q https://github.com/dragonwell-releng/jenkinsUserContent/blob/master/checker/htmlReporter.py -O htmlReporter.py"
+                    sh "wget -q https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/checker/htmlReporter.py -O htmlReporter.py"
                     sh "python htmlReporter.py"
                 }
             }
