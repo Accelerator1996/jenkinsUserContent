@@ -7,9 +7,9 @@ def pkgs = []
 @groovy.transform.Field def publishtag = ""
 @groovy.transform.Field def platforms = []
 if ("${params.RELEASE}" == "17") {
-    platforms = ["aarch64_linux","x64_alpine-linux","x64_linux","x86_windows"]
+    platforms = ["aarch64_linux", "x64_alpine-linux", "x64_linux", "x86_windows"]
 } else {
-    platforms = ["aarch64_linux","x64_alpine-linux","x64_linux","x64_windows"] 
+    platforms = ["aarch64_linux", "x64_alpine-linux", "x64_linux", "x64_windows"]
 }
 @groovy.transform.Field def pkg_list = []
 @groovy.transform.Field def txt_list = []
@@ -19,16 +19,16 @@ if ("${params.RELEASE}" == "17") {
 
 def addResult(test, result, msg) {
     results["${test}"] = [
-        "result" : true,
-        "message" : msg
+            "result" : true,
+            "message": msg
     ]
 }
 
 def checkName(name) {
-    def tag = githubtag.split( "dragonwell-")[1].split("_jdk")[0]
-    def reg_tag = tag.replaceAll('\\+',  '\\\\\\+')
+    def tag = githubtag.split("dragonwell-")[1].split("_jdk")[0]
+    def reg_tag = tag.replaceAll('\\+', '\\\\\\+')
     def ret_value = false
-    for(platform in platforms) {
+    for (platform in platforms) {
         def res = name.matches("Alibaba_Dragonwell_${reg_tag}_${platform}.*")
         if (res == true) {
             ret_value = res
@@ -71,21 +71,21 @@ def releaseDisplay(release) {
     } else {
         addResult("checkGithubRleaseArtifactsSum", true, platforms.size())
     }
-   return assets
+    return assets
 }
 
 def validateFile(pkg_name, cmp_file) {
-    def sha_val = sh returnStdout:true,script: "sha256sum ${pkg_name} | cut -d ' ' -f 1"
-    def check_res = sh returnStdout:true,script: "cat ${cmp_file} | grep ${sha_val}"
+    def sha_val = sh returnStdout: true, script: "sha256sum ${pkg_name} | cut -d ' ' -f 1"
+    def check_res = sh returnStdout: true, script: "cat ${cmp_file} | grep ${sha_val}"
     if (check_res == false) {
         error "sha256 is wrong"
     }
 }
 
-DIR=""
-GITHUBTAG=""
-VERSION=""
-HTML=""
+DIR = ""
+GITHUBTAG = ""
+VERSION = ""
+HTML = ""
 
 /**
  * Check the latest release
@@ -93,7 +93,7 @@ HTML=""
 pipeline {
     agent none
     parameters {
-            choice(name: 'RELEASE', choices: '17\n11\n8\n',   description: 'Use which Multiplexing')
+        choice(name: 'RELEASE', choices: '17\n11\n8\n', description: 'Use which Multiplexing')
     }
     stages {
         stage('Check Github Artifact format') {
@@ -126,7 +126,7 @@ pipeline {
                 }
             }
         }
-        stage('Parallel Job' ) {
+        stage('Parallel Job') {
             parallel {
                 stage("Test On Windows") {
                     agent {
@@ -313,11 +313,23 @@ pipeline {
             steps {
                 script {
                     writeFile file: 'release.json', text: groovy.json.JsonOutput.toJson(results)
+                    sh "rm -rf reports || true"
+                    sh "wget -q https://github.com/dragonwell-releng/jenkinsUserContent/blob/master/checker/htmlReporter.py -O htmlReporter.py"
+                    sh "apt-get update"
+                    sh "apt install python-pip"
+                    sh "pip install html-testRunner"
+                    sh "python htmlReporter.py"
                 }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: "release.json"
+                    publishHTML(target: [allowMissing         : false,
+                                         alwaysLinkToLastBuild: true,
+                                         keepAll              : true,
+                                         reportDir            : 'reports',
+                                         reportFiles          : 'TestResults*.html',
+                                         reportName           : 'Test Reports',
+                                         reportTitles         : 'Test Report'])
                 }
             }
         }
