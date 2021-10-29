@@ -32,6 +32,7 @@ pipeline {
                             userInput++
                             echo "\033[31m 任务已被审批人 ${user} 拒绝。 \033[0m"
                             currentBuild.result = 'ABORTED'
+                            throw err
                         }
                         try {
                             userInput = input(
@@ -43,6 +44,7 @@ pipeline {
                             userInput++
                             echo "\033[31m 任务已被审批人 ${user} 拒绝。 \033[0m"
                             currentBuild.result = 'ABORTED'
+                            throw err
                         }
                     }
 
@@ -65,6 +67,7 @@ pipeline {
                                 userInput2 = false
                                 echo "\033[31m 任务已被系统管理员 ${user} 拒绝。 \033[0m"
                                 currentBuild.result = 'ABORTED'
+                                throw err
                             }
                         }
 
@@ -80,6 +83,7 @@ pipeline {
                                 userInput2 = false
                                 echo "\033[31m 任务已被系统管理员 ${user} 拒绝。 \033[0m"
                                 currentBuild.result = 'ABORTED'
+                                throw err
                             }
                         }
 
