@@ -25,7 +25,7 @@ pipeline {
                         try {
                             userInput = input(
                                     id: 'inputap', message: "测试结果审批", ok: "", submitter: "", parameters: [
-                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/Test_openjdk17_dragonwell_sanity.system_x86-64_linux/23/tapTestReport/">测试报告</a> ', name: '测试结果检查'],
+                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/testResultReporter/lastBuild/Test_20Reports/">测试报告</a> ', name: '测试结果检查'],
                             ])
                         } catch (err) { // input false
                             def user = err.getCauses()[0].getUser()
@@ -36,7 +36,7 @@ pipeline {
                         try {
                             userInput = input(
                                     id: 'inputap', message: "测试结果审批-第二节点", ok: "", submitter: "", parameters: [
-                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/Test_openjdk17_dragonwell_sanity.system_x86-64_linux/23/tapTestReport/">测试报告</a> ', name: '测试结果检查'],
+                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/testResultReporter/lastBuild/Test_20Reports/">测试报告</a> ', name: '测试结果检查'],
                             ])
                         } catch (err) { // input false
                             def user = err.getCauses()[0].getUser()
