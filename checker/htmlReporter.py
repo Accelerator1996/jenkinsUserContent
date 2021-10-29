@@ -1,8 +1,11 @@
 import HtmlTestRunner
 import unittest
 import json
+from types import FunctionType, CodeType
 
 results = json.load(open('release.json'))
+print results
+print results.get("checkGithubRleaseArtifactsSum")
 
 # TODO: enable check_tag shell
 class TestStringMethods(unittest.TestCase):
@@ -12,25 +15,18 @@ class TestStringMethods(unittest.TestCase):
         print results.get("checkGithubReleaseArtifactsName")
         self.assertTrue(results.get("checkGithubReleaseArtifactsName").get("result"))
 
-    def test_checkGithubRleaseArtifactsSum(self):
-        print results.get("checkGithubRleaseArtifactsSum")
-        self.assertTrue(results.get("checkGithubRleaseArtifactsSum").get("result"))
-
-    def test_LinuxX64AlpineCheckSumValidate(self):
-        print results.get("LinuxX64AlpineCheckSumValidate")
-        self.assertTrue(results.get("LinuxX64AlpineCheckSumValidate").get("result"))
-
-    def test_LinuxX64CheckSumValidate(self):
-        print results.get("LinuxX64CheckSumValidate")
-        self.assertTrue(results.get("LinuxX64CheckSumValidate").get("result"))
-
-    def test_WindowsCheckSumValidate(self):
-        print results.get("WindowsCheckSumValidate")
-        self.assertTrue(results.get("WindowsCheckSumValidate").get("result"))
-
-    def test_LinuxAarch64CheckSumValidate(self):
-        print results.get("LinuxAarch64CheckSumValidate")
-        self.assertTrue(results.get("LinuxAarch64CheckSumValidate").get("result"))
+code_template = """
+def test_template(self):
+    print results.get(\"NAME\")
+    self.assertTrue(results.get(\"NAME\").get("result"))
+"""
 
 if __name__ == '__main__':
+    for k in results:
+        code_template = code_template.replace("NAME", k)
+        print code_template
+        foo_compile = compile(code_template , "", "exec")
+        foo_code = [ i for i in foo_compile.co_consts if isinstance(i, CodeType)][0]
+        testName = "test_"+k
+        setattr(TestStringMethods, testName, FunctionType(foo_code, globals()))
     unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner())
