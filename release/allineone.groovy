@@ -1,7 +1,12 @@
 def skipRemainingStages = false, skipApprove = false, Exec = false, timeout_mins = 4320
 
 pipeline {
-    agent any
+    agent {
+        label "linux&&x64"
+    }
+    parameters {
+        choice(name: 'RELEASE', choices: '17\n11\n8\n', description: 'Use which Multiplexing')
+    }
     options {
         ansiColor('xterm')
     }
@@ -14,21 +19,36 @@ pipeline {
             steps {
                 script {
                     //等待审批人审批，并通过timeout设置任务过期时间，防止任务永远挂起
-                    def userInput
+                    def userInput = 0
+                    build job: 'testResultReporter', parameters: [string(name: 'RELEASE', value: "${params.RELEASE}")]
                     timeout(timeout_mins) {
                         try {
                             userInput = input(
-                                    id: 'inputap', message: "第一次审批", ok: "", submitter: "", parameters: [
+                                    id: 'inputap', message: "测试结果审批", ok: "", submitter: "", parameters: [
                                     [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/Test_openjdk17_dragonwell_sanity.system_x86-64_linux/23/tapTestReport/">测试报告</a> ', name: '测试结果检查'],
                             ])
                         } catch (err) { // input false
                             def user = err.getCauses()[0].getUser()
-                            userInput = false
+                            userInput++
+                            echo "\033[31m 任务已被审批人 ${user} 拒绝。 \033[0m"
+                            currentBuild.result = 'ABORTED'
+                        }
+                        try {
+                            userInput = input(
+                                    id: 'inputap', message: "测试结果审批-第二节点", ok: "", submitter: "", parameters: [
+                                    [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/Test_openjdk17_dragonwell_sanity.system_x86-64_linux/23/tapTestReport/">测试报告</a> ', name: '测试结果检查'],
+                            ])
+                        } catch (err) { // input false
+                            def user = err.getCauses()[0].getUser()
+                            userInput++
                             echo "\033[31m 任务已被审批人 ${user} 拒绝。 \033[0m"
                             currentBuild.result = 'ABORTED'
                         }
                     }
-                    if (userInput == true) {
+
+                    build job: 'dragonwell-artifact-checker', parameters: [string(name: 'RELEASE', value: "${params.RELEASE}")]
+
+                    if (userInput == 2) {
                         //发邮件待系统管理员执行任务
                         echo " 已审批完成，待系统管理员执行"
 
@@ -36,7 +56,22 @@ pipeline {
                         timeout(timeout_mins) {
                             try {
                                 userInput2 = input(
-                                        id: 'inputop', message: "第二次审批", ok: "执行", submitter: "", parameters: [
+                                        id: 'inputop', message: "规范格式审批", ok: "执行", submitter: "", parameters: [
+                                        [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/dragonwell-artifact-checker/lastBuild/Test_20Reports/">Github报告</a>', name: "Github check"],
+                                        [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/dragonwell-artifact-checker/25/console">Docker报告(待开发)</a>', name: "Docker check"],
+                                ])
+                            } catch (err) { // input false
+                                def user = err.getCauses()[0].getUser()
+                                userInput2 = false
+                                echo "\033[31m 任务已被系统管理员 ${user} 拒绝。 \033[0m"
+                                currentBuild.result = 'ABORTED'
+                            }
+                        }
+
+                        timeout(timeout_mins) {
+                            try {
+                                userInput2 = input(
+                                        id: 'inputop', message: "规范格式审批-第二节点", ok: "执行", submitter: "", parameters: [
                                         [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/dragonwell-artifact-checker/25/console">Github报告</a>', name: "Github check"],
                                         [$class: 'BooleanParameterDefinition', defaultValue: true, description: '<a href="http://ci.dragonwell-jdk.io/job/dragonwell-artifact-checker/25/console">Docker报告</a>', name: "Docker check"],
                                 ])
