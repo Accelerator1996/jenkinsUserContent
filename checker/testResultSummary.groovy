@@ -14,6 +14,7 @@ pipeline {
             }
             steps {
                 script {
+                    sh "rm -rf reports || true"
                     sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/checker/resultReporter${params.RELEASE}.py -O resultReporter.py"
                     sh "python resultReporter.py"
                     sh "wget -q https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/checker/htmlReporter.py -O htmlReporter.py"
