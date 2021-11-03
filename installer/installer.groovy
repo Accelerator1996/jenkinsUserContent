@@ -9,6 +9,38 @@ TOKEN = "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"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
+RELEASE_NOTES_TEMPLATE= """
+# jdk-17.0.0+35
+
+## version
+```
+openjdk version "17" 2021-09-14
+OpenJDK Runtime Environment (Alibaba Dragonwell)-17.0.0+35 (build 17+35)
+OpenJDK 64-Bit Server VM (Alibaba Dragonwell)-17.0.0+35 (build 17+35, mixed mode, sharing)
+```
+"""
+
+DOCKER_IMAGES_TEMPLATE="""
+# jdk-17.0.0+35
+
+| Image:Tag | arch | OS | slim? |
+|---|---|---|---|
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga | x86_64 | centos | No |
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga-alpine | x86_64 | alpine | No |
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga | aarch64 | centos |
+"""
+MIRROS_DOWNLOAD_TEMPLATE="""
+
+# jdk-17.0.0+35
+
+| File name | China mainland | United States |
+|---|---|---|
+| Alibaba_Dragonwell_jdk-17.0.0+35_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_aarch64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-17.0.0+35_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x64_alpine-linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-17.0.0+35_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-17.0.0+35_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x86_windows.zip) |
+"""
+
 if (params.RELEASE == "8") {
     PARENT_JOB_NAME = ""
     JDK_NAME = ""
@@ -64,6 +96,9 @@ pipeline {
         booleanParam(defaultValue: true,
                 description: 'clean workspace',
                 name: 'CLEAN')
+        booleanParam(defaultValue: false,
+                description: 'update wiki',
+                name: 'WIKI')
         string(name: 'DOCKER_URL',
                 defaultValue: "latest",
                 description: 'Build number')
@@ -196,6 +231,41 @@ pipeline {
                     def urlAlpine = ""
                     sh "wget ${BUILDER} -O build.sh"
                     sh "sh build.sh ${url} ${params.GITHUBTAG} ${urlAlpine}"
+                }
+            }
+        }
+
+        stage('wiki-update') {
+            when {
+                // Only say hello if a "greeting" is requested
+                expression { params.WIKI == true }
+            }
+            agent {
+                label 'ossworker'
+            }
+            steps {
+                script {
+                    sh "rm -rf workspace/target/ || true"
+                    copyArtifacts(
+                            projectName: "build-scripts/openjdk${params.RELEASE}-pipeline",
+                            filter: "**/${HEAD}*x64_linux*dragonwell*tar.gz*json",
+                            selector: specific("${params.BUILDNUMBER}"),
+                            fingerprintArtifacts: true,
+                            target: "workspace/target/",
+                            flatten: true)
+                    dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
+                        print "更新ReleaseNotes"
+                        sh "for x in `ls | grep json`; do mv \$x meta.json; done;"
+                        def content = sh(script: 'cat meta.json', returnStdout: true).split()
+                        def meta = new JsonSlurper().parse(content)
+                        def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
+                        if (!releasenots.contains("${params.VERSION}")) {
+                            print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
+                        }
+                        print "更新发布说明"
+                        print "更新docker镜像"
+                        print "更新OSS下载链接"
+                    }
                 }
             }
         }
