@@ -64,6 +64,15 @@ pipeline {
         booleanParam(defaultValue: true,
                 description: 'clean workspace',
                 name: 'CLEAN')
+        string(name: 'DOCKER_URL',
+                defaultValue: "latest",
+                description: 'Build number')
+        string(name: 'DOCKER_ALPINE_URL',
+                defaultValue: "latest",
+                description: 'Build number')
+        string(name: 'DOCKER_ARM_URL',
+                defaultValue: "latest",
+                description: 'Build number')
 
     }
     environment {
@@ -165,8 +174,8 @@ pipeline {
             steps {
                 script {
                     sh "docker login"
-                    def url = "https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0%2B35_x64_linux.tar.gz"
-                    def urlAlpine = "https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0%2B35_x64_alpine-linux.tar.gz"
+                    def url = "${params.DOCKER_URL}"
+                    def urlAlpine = "${params.DOCKER_ALPINE_URL}"
                     sh "wget ${BUILDER} -O build.sh"
                     sh "sh build.sh ${url} ${params.GITHUBTAG} ${urlAlpine}"
                 }
@@ -183,7 +192,7 @@ pipeline {
             steps {
                 script {
                     sh "docker login"
-                    def url = "https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0%2B35_aarch64_linux.tar.gz"
+                    def url = "${params.DOCKER_ARM_URL}"
                     def urlAlpine = ""
                     sh "wget ${BUILDER} -O build.sh"
                     sh "sh build.sh ${url} ${params.GITHUBTAG} ${urlAlpine}"
