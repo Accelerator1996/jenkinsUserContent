@@ -26,7 +26,7 @@ LICENSE="#
 cat > Dockerfile << END_SH
 $LICENSE
 
-FROM adoptopenjdk/centos7_build_image
+FROM centos:7
 
 RUN yum install -y tzdata openssl curl ca-certificates fontconfig gzip tar \\
     && yum update -y; yum clean all
@@ -51,7 +51,7 @@ END_SH
 cat > Dockerfile.slim << END_SH
 $LICENSE
 
-FROM adoptopenjdk/centos7_build_image
+FROM centos:7
 
 COPY slim-java/* /usr/local/bin/
 
