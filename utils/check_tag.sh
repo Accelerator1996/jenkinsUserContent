@@ -71,6 +71,9 @@ do
     flag=1
   fi
 done
+if [ "${java_patch_num}" -ne "${curr_patch_num}" ] || [ "${upstream_patch_num}" -ne "${curr_patch_num}" ];then
+  err_exit "build number should be the same!"
+fi
 if [ "$flag" -eq 0 ] && [ "${#curr_list[@]}" -eq "${#java_list[@]}" ] && [ "${curr_patch_num}" -le "${java_patch_num}" ];then
   err_exit "invalid version, version patch number less than java version!"
 fi
