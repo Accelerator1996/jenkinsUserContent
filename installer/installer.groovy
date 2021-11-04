@@ -5,7 +5,7 @@ properties[
         [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false],
 ]
 OSS_TOOL = "/home/testuser/ossutil64"
-TOKEN = "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"
+TOKEN = "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"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
@@ -13,7 +13,7 @@ RELEASE_NOTES_TEMPLATE= """
 # jdk-17.0.0+35
 
 ## version
-```q
+``` 
 openjdk version "17" 2021-09-14
 OpenJDK Runtime Environment (Alibaba Dragonwell)-17.0.0+35 (build 17+35)
 OpenJDK 64-Bit Server VM (Alibaba Dragonwell)-17.0.0+35 (build 17+35, mixed mode, sharing)
