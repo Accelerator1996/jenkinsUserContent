@@ -48,7 +48,7 @@ for item in platforms:
         reportName = "/lastBuild/tapTestReport/"
         if test.find("openjdk") != -1:
             reportName = "/lastBuild/testReport/"
-        report = "<a href=\"http://ci.dragonwell-jdk.io/job/" + jobName + reportName + "\">测试报告链接</a>"
+        report = "<a href=\"http://ci.dragonwell-jdk.io/job/" + jobName + reportName + "\">" +  jobName +"</a>"
         if (build_info['result'] == "SUCCESS"):
             results[jobName.replace('.', '_')] = {
                 'result': True,
