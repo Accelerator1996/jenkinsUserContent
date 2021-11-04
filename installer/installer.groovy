@@ -5,7 +5,7 @@ properties[
         [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false],
 ]
 OSS_TOOL = "/home/testuser/ossutil64"
-TOKEN = "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"
+TOKEN = "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"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
