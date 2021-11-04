@@ -46,9 +46,9 @@ for item in platforms:
         build_info = server.get_build_info(jobName, number)
         print jobName, build_info['result']
         reportName = "/lastBuild/tapTestReport/"
-        if test.contains("openjdk"):
+        if test.find("openjdk") != -1:
             reportName = "/testReport/"
-        report = "<a href=\" + ""http://ci.dragonwell-jdk.io/job/" + jobName + reportName + "\"></a>"
+        report = "<a href=\"http://ci.dragonwell-jdk.io/job/" + jobName + reportName + "\"></a>"
         if (build_info['result'] == "SUCCESS"):
             results[jobName.replace('.', '_')] = {
                 'result': True,
