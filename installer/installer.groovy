@@ -253,7 +253,7 @@ pipeline {
                             flatten: true)
                     dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
-                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version > tmpt", returnStdout: true).split()
+                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version &> tmpt", returnStdout: true).split()
                         def fullVersionOutput = files = sh(script: 'cat tmpt', returnStdout: true)
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
@@ -266,7 +266,7 @@ pipeline {
                                 fromTag = "--fromtag ${lastRelease}"
                             }
                             sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/driller.py -O driller.py"
-                            def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master > tmpt", returnStdout: true)
+                            def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
                             print "#${params.RELEASE}"
                             print """
                             ```
