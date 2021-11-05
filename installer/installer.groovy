@@ -265,7 +265,7 @@ pipeline {
                                 fromTag = "--fromtag ${lastRelease}"
                             }
                             sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/driller.py -O driller.py"
-                            def gitLogReport =  files = sh(script: "python driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
+                            def gitLogReport =  files = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
                             print "#${params.RELEASE}"
                             print """
                             ```
