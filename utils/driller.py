@@ -40,7 +40,7 @@ if __name__ == "__main__":
         cr_link=""
         issue_link=""
         for line in commit.message.split("\n"):
-            if re.match(r"\[Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)(.*)", commit.summary) != None:
+            if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
                 table_data.append([commit.summary])
     writer = MarkdownTableWriter(
         table_name="release_notes",
