@@ -117,6 +117,7 @@ RUN set -eux; \\
     cd /opt/alibaba/\${DRAGONWELL_DIR}; \\
     tar -xf /tmp/dragonwell17.tar.gz --strip-components=1; \\
     export PATH="/opt/alibaba/\${DRAGONWELL_DIR}/bin:\$PATH"; \\
+    chmod 777 /usr/local/bin/slim-java.sh; \\
     /usr/local/bin/slim-java.sh /opt/alibaba/\${DRAGONWELL_DIR}; \\
     rm -rf /tmp/dragonwell17.tar.gz;
 
@@ -151,6 +152,8 @@ export IMAGE_TAG="${IMAGE_TAG}_slim"
 export DOCKER_FILE=Dockerfile.slim
 mkdir slim-java
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java.sh -O slim-java/slim-java.sh
+wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_keep.list -O slim-java/slim-java_rtjar_keep.list;
+wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_del.list -O slim-java/slim-java_rtjar_del.list;
 operation_docker
 rm -rf slim-java
 
