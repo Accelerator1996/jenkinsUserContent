@@ -253,12 +253,7 @@ pipeline {
                             flatten: true)
                     dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
-                        sh "for x in `ls | grep json`; do mv \$x meta.json; done;"
-                        def content = sh(script: 'cat meta.json', returnStdout: true).split()
-                        def meta = new JsonSlurper().parse(content)
                         def fullVersionOutput = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version", returnStdout: true).split()
-                        print content
-                        print meta
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
