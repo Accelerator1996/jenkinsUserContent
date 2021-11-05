@@ -1,5 +1,6 @@
 import sys,argparse
 import git
+import re
 from pytablewriter import MarkdownTableWriter
 
 
@@ -39,15 +40,11 @@ if __name__ == "__main__":
         cr_link=""
         issue_link=""
         for line in commit.message.split("\n"):
-            if 'CR' in line:
-                cr_link = line
-            if 'Issue' in line:
-                issue_link = line
-        if issue_link != "":
-            table_data.append([commit.summary, cr_link ])
+        if re.match(r"\[Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)(.*)", str) != None:
+            table_data.append([commit.summary])
     writer = MarkdownTableWriter(
         table_name="release_notes",
-        headers=["summary", "cr"],
+        headers=["summary"],
         value_matrix=table_data
     )
     writer.write_table()
