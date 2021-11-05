@@ -21,7 +21,7 @@ pipeline {
                     GITHUBTAG = card[0].get("tag_name")
                     if (params.RELEASE == "17") {
                         // docker 不允许用+
-                        GITHUBTAG = GITHUBTAG.replace("+", "-")
+                        GITHUBTAG = GITHUBTAG.replace("+", ".")
                     }
                 }
             }
