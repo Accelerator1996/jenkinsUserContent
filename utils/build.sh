@@ -95,6 +95,7 @@ operation_docker
 
 echo "build slim java"
 export IMAGE_TAG="${IMAGE_TAG}_slim"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}_slim"
 export DOCKER_FILE=Dockerfile.slim
 mkdir slim-java
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java.sh -O slim-java/slim-java.sh

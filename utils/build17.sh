@@ -140,7 +140,7 @@ export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAG
 export DOCKER_FILE=Dockerfile
 operation_docker
 
-if [! -z "${BINARYALPINE}" ]; then
+if [ ! -z "${BINARYALPINE}" ]; then
 export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}-alpine"
 export DOCKER_FILE=Dockerfile.alpine
 operation_docker
@@ -148,7 +148,7 @@ fi
 
 
 echo "build slim java"
-export IMAGE_TAG="${IMAGE_TAG}_slim"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}_slim"
 export DOCKER_FILE=Dockerfile.slim
 mkdir slim-java
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java.sh -O slim-java/slim-java.sh
