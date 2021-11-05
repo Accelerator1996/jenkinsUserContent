@@ -254,7 +254,8 @@ pipeline {
                     dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version &> tmpt")
-                        def fullVersionOutput = sh(script: 'cat tmpt', returnStdout: true)
+                        def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).trim()
+                        print "fullversion is ${fullVersionOutput}"
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
