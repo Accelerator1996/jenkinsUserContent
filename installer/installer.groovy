@@ -270,9 +270,9 @@ pipeline {
                             def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
                             print "#${params.RELEASE}"
                             print """
-                            ```
+ ```
 ${fullVersionOutput}
-                            ```
+ ```
                             """
                             print gitLogReport
                         }
