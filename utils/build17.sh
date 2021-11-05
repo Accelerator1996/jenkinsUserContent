@@ -106,19 +106,19 @@ RUN yum install -y tzdata openssl curl ca-certificates fontconfig gzip tar \\
 
 COPY slim-java/* /usr/local/bin/
 
-ENV JAVA_VERSION dragonwell8u
+ENV JAVA_VERSION dragonwell17u
 
 RUN set -eux; \\
     BINARY_URL='$BINARY'; \\
     DRAGONWELL_DIR=$DIR; \\
-    curl -LSo /tmp/dragonwell8.tar.gz \${BINARY_URL}; \\
+    curl -LSo /tmp/dragonwell17.tar.gz \${BINARY_URL}; \\
     rm -rf /opt/alibaba/; \\
     mkdir -p /opt/alibaba/\${DRAGONWELL_DIR}; \\
     cd /opt/alibaba/\${DRAGONWELL_DIR}; \\
-    tar -xf /tmp/dragonwell8.tar.gz --strip-components=1; \\
+    tar -xf /tmp/dragonwell17.tar.gz --strip-components=1; \\
     export PATH="/opt/alibaba/\${DRAGONWELL_DIR}/bin:\$PATH"; \\
     /usr/local/bin/slim-java.sh /opt/alibaba/\${DRAGONWELL_DIR}; \\
-    rm -rf /tmp/dragonwell8.tar.gz;
+    rm -rf /tmp/dragonwell17.tar.gz;
 
 ENV JAVA_HOME=/opt/alibaba/$DIR \\
     PATH="/opt/alibaba/$DIR/bin:\$PATH"
