@@ -256,9 +256,28 @@ pipeline {
                         sh "for x in `ls | grep json`; do mv \$x meta.json; done;"
                         def content = sh(script: 'cat meta.json', returnStdout: true).split()
                         def meta = new JsonSlurper().parse(content)
+                        def fullVersionOutput = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version", returnStdout: true).split()
+                        print content
+                        print meta
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
+                            URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
+                            def card = new JsonSlurper().parse(apiUrl)
+                            def fromTag = ""
+                            if (card.size() > 1) {
+                                def lastRelease = card[1].get("tag_name")
+                                fromTag = "--fromtag ${lastRelease}"
+                            }
+                            sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/driller.py -O driller.py"
+                            def gitLogReport =  files = sh(script: "python driller.py --repo https://github.com.cnpmjs.org/alibaba/dragonwell${params.VERSION} ${fromTag} --totag master", returnStdout: true)
+                            print "#${params.RELEASE}"
+                            print """
+                            ```
+                            ${fullVersionOutput}
+                            ```
+                            """
+                            print gitLogReport
                         }
                         print "更新发布说明"
                         print "更新docker镜像"

@@ -37,6 +37,8 @@ pipeline {
                             sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}"
                             def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
+                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            print version
                         }
                     }
                 }
@@ -48,6 +50,8 @@ pipeline {
                         script {
                             sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}"
                             def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            print version
+                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
                         }
                     }
