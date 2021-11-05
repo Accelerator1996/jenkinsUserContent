@@ -10,35 +10,33 @@ RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
 RELEASE_NOTES_TEMPLATE= """
-# jdk-17.0.0+35
+# VERSION
 
 ## version
 ``` 
-openjdk version "17" 2021-09-14
-OpenJDK Runtime Environment (Alibaba Dragonwell)-17.0.0+35 (build 17+35)
-OpenJDK 64-Bit Server VM (Alibaba Dragonwell)-17.0.0+35 (build 17+35, mixed mode, sharing)
+VERSION_OUTPUT
 ```
 """
 
 DOCKER_IMAGES_TEMPLATE="""
-# jdk-17.0.0+35
+# VERSION
 
 | Image:Tag | arch | OS | slim? |
 |---|---|---|---|
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga | x86_64 | centos | No |
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga-alpine | x86_64 | alpine | No |
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-17.0.0.35_jdk-17-ga | aarch64 | centos |
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | x86_64 | centos | No |
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION-alpine | x86_64 | alpine | No |
+| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | aarch64 | centos |
 """
-MIRROS_DOWNLOAD_TEMPLATE="""
+MIRROS_DOWNLOAD_17_TEMPLATE="""
 
-# jdk-17.0.0+35
+# VERSION
 
 | File name | China mainland | United States |
 |---|---|---|
-| Alibaba_Dragonwell_jdk-17.0.0+35_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_aarch64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-17.0.0+35_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x64_alpine-linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-17.0.0+35_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-17.0.0+35_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/17.0.0%2B35/Alibaba_Dragonwell_17.0.0%2B35_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell17/releases/download/dragonwell-17.0.0%2B35_jdk-17-ga/Alibaba_Dragonwell_17.0.0+35_x86_windows.zip) |
+| Alibaba_Dragonwell_jdk-VERSION_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_aarch64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-VERSION_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x64_alpine-linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-VERSION_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-VERSION_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x86_windows.zip) |
 """
 
 if (params.RELEASE == "8") {

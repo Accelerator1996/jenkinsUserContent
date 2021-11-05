@@ -145,10 +145,12 @@ export DOCKER_FILE=Dockerfile.alpine
 operation_docker
 fi
 
+
+echo "build slim java"
 export IMAGE_TAG="${IMAGE_TAG}_slim"
 export DOCKER_FILE=Dockerfile.slim
 mkdir slim-java
-cp ../slim-java/* slim-java
+wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java.sh -O slim-java/slim-java.sh
 operation_docker
 rm -rf slim-java
 
