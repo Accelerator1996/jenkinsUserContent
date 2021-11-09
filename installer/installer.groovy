@@ -306,10 +306,10 @@ ${gitLogReport}
                         if (!osslinks.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到下载镜像"
                             writeFile file: 'Mirrors-for-download-(下载镜像).md', text: (MIRROS_DOWNLOAD_TEMPLATE + osslinks)
+                            sh "git add 'Mirrors-for-download-(下载镜像).md'"
+                            sh "git commit -m \" update Mirrors for download\""
+                            sh "git push origin HEAD:master"
                         }
-                        sh "git add 'Mirrors-for-download-(下载镜像).md'"
-                        sh "git commit -m \" update Mirrors for download\""
-                        sh "git push origin HEAD:master"
                     }
                 }
             }
