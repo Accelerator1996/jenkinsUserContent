@@ -144,6 +144,7 @@ if [ ! -z "${BINARYALPINE}" ]; then
 export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}-alpine"
 export DOCKER_FILE=Dockerfile.alpine
 operation_docker
+docker push ${DOCKER_ID}
 fi
 
 
@@ -155,5 +156,6 @@ wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_keep.list -O slim-java/slim-java_rtjar_keep.list;
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_del.list -O slim-java/slim-java_rtjar_del.list;
 operation_docker
+docker push ${DOCKER_ID}
 rm -rf slim-java
 

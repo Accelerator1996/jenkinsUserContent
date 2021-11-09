@@ -90,6 +90,7 @@ operation_docker() {
 
 export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell8:${IMAGE_TAG}"
 export DOCKER_FILE=Dockerfile
+docker push ${DOCKER_ID}
 operation_docker
 
 
@@ -101,5 +102,6 @@ wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_keep.list -O slim-java/slim-java_rtjar_keep.list;
 wget https://raw.githubusercontent.com/AdoptOpenJDK/openjdk-docker/master/8/jdk/ubuntu/slim-java_rtjar_del.list -O slim-java/slim-java_rtjar_del.list;
 operation_docker
+docker push ${DOCKER_ID}
 rm -rf slim-java
 
