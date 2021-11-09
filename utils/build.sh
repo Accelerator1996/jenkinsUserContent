@@ -3,6 +3,7 @@
 BINARY=$1
 DIR="dragonwell8"
 IMAGE_TAG=$2
+ARCH=`arch`
 
 # Prepare Dockerfiles
 LICENSE="#
@@ -88,7 +89,7 @@ operation_docker() {
 }
 
 
-export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell8:${IMAGE_TAG}"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell8:${IMAGE_TAG}_${ARCH}"
 export DOCKER_FILE=Dockerfile
 docker push ${DOCKER_ID}
 operation_docker

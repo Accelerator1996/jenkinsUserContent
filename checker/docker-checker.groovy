@@ -62,8 +62,8 @@ pipeline {
                     }
                     steps {
                         script {
-                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}-alpine"
-                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG} /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_alpine"
+                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_alpine /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
                         }
                     }

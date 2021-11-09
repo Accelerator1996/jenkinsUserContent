@@ -136,12 +136,12 @@ operation_docker() {
 }
 
 
-export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}_${ARCH}"
 export DOCKER_FILE=Dockerfile
 operation_docker
 
 if [ ! -z "${BINARYALPINE}" ]; then
-export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}-alpine"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}_alpine_${ARCH}"
 export DOCKER_FILE=Dockerfile.alpine
 operation_docker
 docker push ${DOCKER_ID}
