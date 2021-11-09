@@ -287,7 +287,7 @@ ${gitLogReport}
                             print "更新 ${tagName4Docker} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
                             ArrayList l = new ArrayList(Arrays.asList(dockerimages.split("\n")))
                             for (int i = 0; i < l.size(); i++) {
-                                if (l.get(i) == "|---|---|---|---|") {
+                                if (l.get(i).contains("---")) {
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE1.replace("VERSION", tagName4Docker));
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName4Docker));
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName4Docker));
