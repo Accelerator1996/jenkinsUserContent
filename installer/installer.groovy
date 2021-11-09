@@ -253,6 +253,7 @@ pipeline {
                             flatten: true)
                     dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
+                        sh "git fetch origin && git reset --hard origin/master"
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version 2> tmpt")
                         def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).replace(" ", "")
                         print "fullversion is ${fullVersionOutput}"
@@ -268,13 +269,17 @@ pipeline {
                             }
                             sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/driller.py -O driller.py"
                             def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
-                            print "#${params.RELEASE}"
-                            print """
+                            def newReleasenotes = """
+#${params.VERSION}
  ```
 ${fullVersionOutput}
  ```
-                            """
-                            print gitLogReport
+${gitLogReport}
+                            """ + releasenots
+                            writeFile file: "Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", text: newReleasenotes
+                            sh "git add Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
+                            sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md \""
+                            sh "git push origin HEAD:master"
                         }
                         print "更新发布说明"
                         print "更新docker镜像"
