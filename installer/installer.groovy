@@ -292,9 +292,8 @@ ${gitLogReport}
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName4Docker));
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName4Docker));
                                     l.add(i + 1, DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName4Docker));
-                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE5.replace("VERSION", tagName4Docker));
                                     if (params.RELEASE != "8") {
-                                        l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName4Docker), i + 1);
+                                        l.add(i + 1, DOCKER_IMAGES_TEMPLATE5.replace("VERSION", tagName4Docker));
                                     }
                                     break;
                                 }
