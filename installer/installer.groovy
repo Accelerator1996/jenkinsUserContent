@@ -27,10 +27,10 @@ MIRROS_DOWNLOAD_TEMPLATE = """
 
 | File name | China mainland | United States |
 |---|---|---|
-| Alibaba_Dragonwell_jdk-${params.VERSION}_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_aarch64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-${params.VERSION}_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_alpine-linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-${params.VERSION}_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-${params.VERSION}_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/Alibaba_Dragonwell_${params.VERSION}_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_aarch64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/Alibaba_Dragonwell_${params.VERSION}_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_alpine-linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/Alibaba_Dragonwell_${params.VERSION}_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) |
 """
 
 if (params.RELEASE == "8") {
@@ -296,7 +296,7 @@ ${gitLogReport}
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
-                        def fineName = "\'Mirrors-for-download-(下载镜像).md\'""
+                        def fineName = "\'Mirrors-for-download-(下载镜像).md\'"
                         def osslinks = sh(script: "cat $fineName", returnStdout: true).trim()
                         print "oss links ${osslinks}"
                         if (!osslinks.contains("${params.VERSION}")) {
