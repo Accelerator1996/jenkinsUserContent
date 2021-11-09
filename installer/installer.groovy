@@ -247,7 +247,7 @@ pipeline {
                         sh "git reset --hard origin/master"
                     }
                     def tagName = params.GITHUBTAG
-                    if (params.VERSION == "17")
+                    if (params.RELEASE == "17")
                         tagName = tagName.replace("+", ".") // + is not allowed is docker image
                     dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
@@ -291,7 +291,7 @@ ${gitLogReport}
                                     l.add(DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName), i + 1);
                                     l.add(DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName), i + 1);
                                     l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
-                                    if (params.VERSION != "8") {
+                                    if (params.RELEASE != "8") {
                                         l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
                                     }
                                     break;
