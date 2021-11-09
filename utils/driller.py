@@ -37,13 +37,16 @@ if __name__ == "__main__":
         revstr += "..."
         revstr += args.fromtag
     for commit in repo.iter_commits(rev=revstr):
-        cr_link=""
+        summary=""
         issue_link=""
+        for line in commit.message.split("\n"):
+            if 'Issue' in line:
+                issue_link = line
         if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
-            table_data.append([commit.summary])
+            table_data.append([commit.summary, issue_link])
     writer = MarkdownTableWriter(
         table_name="release_notes",
-        headers=["summary"],
+        headers=["summary", "issue"],
         value_matrix=table_data
     )
     writer.write_table()
