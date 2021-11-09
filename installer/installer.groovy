@@ -9,7 +9,7 @@ TOKEN = "ghp_KI10VDceecSlImTXHnhK0cWm7prLUc0oFsU" + "S"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
-RELEASE_NOTES_TEMPLATE= """
+RELEASE_NOTES_TEMPLATE = """
 # VERSION
 
 ## version
@@ -18,16 +18,14 @@ VERSION_OUTPUT
 ```
 """
 
-DOCKER_IMAGES_TEMPLATE="""
-# VERSION
+DOCKER_IMAGES_TEMPLATE1 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | x86_64 | centos | No |"
+DOCKER_IMAGES_TEMPLATE2 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | aarch64 | centos | No |"
+DOCKER_IMAGES_TEMPLATE3 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_slim | x86_64 | centos | Yes |"
+DOCKER_IMAGES_TEMPLATE4 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_slim | aarch64 | centos | Yes |"
+DOCKER_IMAGES_TEMPLATE5 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION-alpine | x86_64 | alpine | No |"
 
-| Image:Tag | arch | OS | slim? |
-|---|---|---|---|
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | x86_64 | centos | No |
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION-alpine | x86_64 | alpine | No |
-| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | aarch64 | centos |
-"""
-MIRROS_DOWNLOAD_17_TEMPLATE="""
+
+MIRROS_DOWNLOAD_17_TEMPLATE = """
 
 # VERSION
 
@@ -244,14 +242,11 @@ pipeline {
             steps {
                 script {
                     sh "rm -rf workspace/target/ || true"
-                    copyArtifacts(
-                            projectName: "build-scripts/openjdk${params.RELEASE}-pipeline",
-                            filter: "**/${HEAD}*x64_linux*dragonwell*tar.gz*json",
-                            selector: specific("${params.BUILDNUMBER}"),
-                            fingerprintArtifacts: true,
-                            target: "workspace/target/",
-                            flatten: true)
-                    dir ("/root/wiki/dragonwell${params.RELEASE}.wiki") {
+                    dir("/repp/dragonwell${params.RELEASE}") {
+                        sh "git fetch origin"
+                        sh "git reset --hard origin/master"
+                    }
+                    dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
                         sh "git fetch origin && git reset --hard origin/master"
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version 2> tmpt")
@@ -281,8 +276,31 @@ ${gitLogReport}
                             sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md \""
                             sh "git push origin HEAD:master"
                         }
-                        print "更新发布说明"
                         print "更新docker镜像"
+                        def dockerimages = sh(script: "cat Use-Dragonwell-${params.RELEASE}-docker-images.md", returnStdout: true).trim()
+                        def tagName = params.GITHUBTAG
+                        if (params.VERSION == "17")
+                            tagName = tagName.replace("+", ".") // + is not allowed is docker image
+                        if (!dockerimages.contains("${tagName}")) {
+                            print "更新 ${tagName} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
+                            ArrayList l = new ArrayList(Arrays.asList(dockerimages.split("\n")))
+                            for (int i = 0; i < l.size(); i++) {
+                                if (l.get(i) == "|---|---|---|---|") {
+                                    l.add(DOCKER_IMAGES_TEMPLATE1.replace("VERSION", tagName), i + 1);
+                                    l.add(DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName), i + 1);
+                                    l.add(DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName), i + 1);
+                                    l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
+                                    if (params.VERSION != "8") {
+                                        l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
+                                    }
+                                    break;
+                                }
+                            }
+                            writeFile file: "Alibaba-Dragonwell-${params.RELEASE}-docker-images.md", text: l.join("\n")
+                            sh "git add Alibaba-Dragonwell-${params.RELEASE}-docker-images.md"
+                            sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-docker-images.md \""
+                            sh "git push origin HEAD:master"
+                        }
                         print "更新OSS下载链接"
                     }
                 }
