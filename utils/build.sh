@@ -89,7 +89,7 @@ operation_docker() {
 }
 
 
-export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell8:${IMAGE_TAG}_${ARCH}"
+export DOCKER_ID="registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${IMAGE_TAG}_${ARCH}"
 export DOCKER_FILE=Dockerfile
 docker push ${DOCKER_ID}
 operation_docker

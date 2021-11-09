@@ -4,6 +4,8 @@ BINARY=$1
 DIR="dragonwell17"
 IMAGE_TAG=$2
 BINARYALPINE=$3
+ARCH=`arch`
+
 
 # Prepare Dockerfiles
 LICENSE="#
