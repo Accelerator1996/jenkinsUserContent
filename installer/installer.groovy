@@ -17,11 +17,11 @@ if (params.RELEASE == "17") {
 }
 
 
-DOCKER_IMAGES_TEMPLATE1 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_x86_64 | x86_64 | centos | No |"
-DOCKER_IMAGES_TEMPLATE2 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_aarch64 | aarch64 | centos | No |"
-DOCKER_IMAGES_TEMPLATE3 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_x86_64_slim | x86_64 | centos | Yes |"
-DOCKER_IMAGES_TEMPLATE4 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_aarch64_slim | aarch64 | centos | Yes |"
-DOCKER_IMAGES_TEMPLATE5 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION_alpine_x86_64 | x86_64 | alpine | No |"
+DOCKER_IMAGES_TEMPLATE1 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_x86_64 | x86_64 | centos | No |"
+DOCKER_IMAGES_TEMPLATE2 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_aarch64 | aarch64 | centos | No |"
+DOCKER_IMAGES_TEMPLATE3 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_x86_64_slim | x86_64 | centos | Yes |"
+DOCKER_IMAGES_TEMPLATE4 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_aarch64_slim | aarch64 | centos | Yes |"
+DOCKER_IMAGES_TEMPLATE5 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_alpine_x86_64 | x86_64 | alpine | No |"
 
 
 MIRROS_DOWNLOAD_TEMPLATE = """
