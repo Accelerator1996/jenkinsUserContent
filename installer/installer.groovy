@@ -246,10 +246,13 @@ pipeline {
                         sh "git fetch origin"
                         sh "git reset --hard origin/master"
                     }
+                    def tagName = params.GITHUBTAG
+                    if (params.VERSION == "17")
+                        tagName = tagName.replace("+", ".") // + is not allowed is docker image
                     dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
                         sh "git fetch origin && git reset --hard origin/master"
-                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${params.GITHUBTAG}_slim java -version 2> tmpt")
+                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName}_slim java -version 2> tmpt")
                         def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).replace(" ", "")
                         print "fullversion is ${fullVersionOutput}"
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
@@ -278,9 +281,7 @@ ${gitLogReport}
                         }
                         print "更新docker镜像"
                         def dockerimages = sh(script: "cat Use-Dragonwell-${params.RELEASE}-docker-images.md", returnStdout: true).trim()
-                        def tagName = params.GITHUBTAG
-                        if (params.VERSION == "17")
-                            tagName = tagName.replace("+", ".") // + is not allowed is docker image
+
                         if (!dockerimages.contains("${tagName}")) {
                             print "更新 ${tagName} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
                             ArrayList l = new ArrayList(Arrays.asList(dockerimages.split("\n")))
