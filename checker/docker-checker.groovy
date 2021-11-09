@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 script {
-                    URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell/${params.RELEASE}/releases")
+                    URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
                     def card = new JsonSlurper().parse(apiUrl)
                     GITHUBTAG = card[0].get("tag_name")
                     if (params.RELEASE == "17") {
