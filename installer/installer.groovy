@@ -298,9 +298,9 @@ ${gitLogReport}
                                     break;
                                 }
                             }
-                            writeFile file: "Alibaba-Dragonwell-${params.RELEASE}-docker-images.md", text: l.join("\n")
-                            sh "git add Alibaba-Dragonwell-${params.RELEASE}-docker-images.md"
-                            sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-docker-images.md \""
+                            writeFile file: "Use-Dragonwell-${params.RELEASE}-docker-images.md", text: l.join("\n")
+                            sh "git add Use-Dragonwell-${params.RELEASE}-docker-images.md"
+                            sh "git commit -m \" update Use-Dragonwell-${params.RELEASE}-docker-images.md \""
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
