@@ -33,6 +33,10 @@ MIRROS_DOWNLOAD_TEMPLATE = """
 | Alibaba_Dragonwell_jdk-${params.VERSION}_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) |
 """
 
+if (params.RELEASE == "17") {
+    MIRROS_DOWNLOAD_TEMPLATE = MIRROS_DOWNLOAD_TEMPLATE.replace("+", "%2B")
+}
+
 if (params.RELEASE == "8") {
     PARENT_JOB_NAME = ""
     JDK_NAME = ""
