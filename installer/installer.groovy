@@ -296,11 +296,11 @@ ${gitLogReport}
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
-                        def osslinks = sh(script: "cat \'Mirrors for download (下载镜像)\'", returnStdout: true).trim()
+                        def osslinks = sh(script: "cat 'Mirrors for download (下载镜像)'", returnStdout: true).trim()
                         if (!osslinks.contains("${params.VERSION}")) {
-                            writeFile file: "\'Mirrors for download (下载镜像)\'", text: MIRROS_DOWNLOAD_17_TEMPLATE + osslinks
+                            writeFile file: "Mirrors for download (下载镜像)' ", text: MIRROS_DOWNLOAD_17_TEMPLATE + osslinks
                         }
-                        sh "git add \'Mirrors for download (下载镜像)\'"
+                        sh "git add 'Mirrors for download (下载镜像)'"
                         sh "git commit -m \" update Mirrors for download\""
                         sh "git push origin HEAD:master"
                     }
