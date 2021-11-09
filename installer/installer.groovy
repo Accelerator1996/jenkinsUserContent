@@ -13,14 +13,6 @@ def tagName4Docker = params.GITHUBTAG
 if (params.RELEASE == "17")
     tagName4Docker = tagName4Docker.replace("+", ".") // + is not allowed is docker image
 
-RELEASE_NOTES_TEMPLATE = """
-# VERSION
-
-## version
-``` 
-VERSION_OUTPUT
-```
-"""
 
 DOCKER_IMAGES_TEMPLATE1 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | x86_64 | centos | No |"
 DOCKER_IMAGES_TEMPLATE2 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:dragonwell-VERSION | aarch64 | centos | No |"
@@ -31,14 +23,14 @@ DOCKER_IMAGES_TEMPLATE5 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragon
 
 MIRROS_DOWNLOAD_17_TEMPLATE = """
 
-# VERSION
+# ${params.VERSION}
 
 | File name | China mainland | United States |
 |---|---|---|
-| Alibaba_Dragonwell_jdk-VERSION_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_aarch64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-VERSION_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x64_alpine-linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-VERSION_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x64_linux.tar.gz) |
-| Alibaba_Dragonwell_jdk-VERSION_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/dragonwell-OSS_VERSION_jdk-17-ga/Alibaba_Dragonwell_VERSION_x86_windows.zip) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_aarch64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_alpine-linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/OSS_VERSION/Alibaba_Dragonwell_OSS_VERSION_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${params.VERSION}_x86_windows.zip) |
 """
 
 if (params.RELEASE == "8") {
@@ -304,6 +296,13 @@ ${gitLogReport}
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
+                        def osslinks = sh(script: "cat \'Mirrors for download (下载镜像)\'", returnStdout: true).trim()
+                        if (!osslinks.contains("${params.VERSION}")) {
+                            writeFile file: "\'Mirrors for download (下载镜像)\'", text: MIRROS_DOWNLOAD_17_TEMPLATE + osslinks
+                        }
+                        sh "git add \'Mirrors for download (下载镜像)\'"
+                        sh "git commit -m \" update Mirrors for download\""
+                        sh "git push origin HEAD:master"
                     }
                 }
             }
