@@ -43,7 +43,7 @@ if (params.RELEASE == "8") {
     PLATFORMS = ["x64_linux", "x64_windows", "aarch64_linux"]
     REPO = "dragonwell8"
     HEAD = "OpenJDK8U-jdk_"
-    BUILDER = "http://ci.dragonwell-jdk.io/userContent/utils/do"
+    BUILDER = "http://ci.dragonwell-jdk.io/userContent/utils/build.sh"
 } else if (params.RELEASE == "11") {
     PARENT_JOB_NAME = ""
     JDK_NAME = ""
