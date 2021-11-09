@@ -247,10 +247,17 @@ pipeline {
                         sh "git reset --hard origin/master"
                     }
                     dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
+//                        copyArtifacts(
+//                                projectName: "build-scripts/openjdk${params.RELEASE}-pipeline",
+//                                filter: "**/${HEAD}*dragonwell*tar.gz*json",
+//                                selector: specific("${params.BUILDNUMBER}"),
+//                                fingerprintArtifacts: true,
+//                                target: "/root/wiki/dragonwell${params.RELEASE}.wiki",
+//                                flatten: true)
                         print "更新ReleaseNotes"
                         sh "git fetch origin && git reset --hard origin/master"
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName4Docker}_slim java -version 2> tmpt")
-                        def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).replace(" ", "")
+                        def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).trim()
                         print "fullversion is ${fullVersionOutput}"
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
