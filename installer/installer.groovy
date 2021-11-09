@@ -9,6 +9,10 @@ TOKEN = "ghp_KI10VDceecSlImTXHnhK0cWm7prLUc0oFsU" + "S"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
+def tagName4Docker = params.GITHUBTAG
+if (params.RELEASE == "17")
+    tagName4Docker = tagName4Docker.replace("+", ".") // + is not allowed is docker image
+
 RELEASE_NOTES_TEMPLATE = """
 # VERSION
 
@@ -208,7 +212,7 @@ pipeline {
                     def url = "${params.DOCKER_URL}"
                     def urlAlpine = "${params.DOCKER_ALPINE_URL}"
                     sh "wget ${BUILDER} -O build.sh"
-                    sh "sh build.sh ${url} ${params.GITHUBTAG} ${urlAlpine}"
+                    sh "sh build.sh ${url} ${tagName4Docker} ${urlAlpine}"
                 }
             }
         }
@@ -226,7 +230,7 @@ pipeline {
                     def url = "${params.DOCKER_ARM_URL}"
                     def urlAlpine = ""
                     sh "wget ${BUILDER} -O build.sh"
-                    sh "sh build.sh ${url} ${params.GITHUBTAG} ${urlAlpine}"
+                    sh "sh build.sh ${url} ${tagName4Docker} ${urlAlpine}"
                 }
             }
         }
@@ -246,13 +250,10 @@ pipeline {
                         sh "git fetch origin"
                         sh "git reset --hard origin/master"
                     }
-                    def tagName = params.GITHUBTAG
-                    if (params.RELEASE == "17")
-                        tagName = tagName.replace("+", ".") // + is not allowed is docker image
                     dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
                         print "更新ReleaseNotes"
                         sh "git fetch origin && git reset --hard origin/master"
-                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName}_slim java -version 2> tmpt")
+                        sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName4Docker}_slim java -version 2> tmpt")
                         def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).replace(" ", "")
                         print "fullversion is ${fullVersionOutput}"
                         def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
@@ -282,17 +283,18 @@ ${gitLogReport}
                         print "更新docker镜像"
                         def dockerimages = sh(script: "cat Use-Dragonwell-${params.RELEASE}-docker-images.md", returnStdout: true).trim()
 
-                        if (!dockerimages.contains("${tagName}")) {
-                            print "更新 ${tagName} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
+                        if (!dockerimages.contains("${tagName4Docker}")) {
+                            print "更新 ${tagName4Docker} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
                             ArrayList l = new ArrayList(Arrays.asList(dockerimages.split("\n")))
                             for (int i = 0; i < l.size(); i++) {
                                 if (l.get(i) == "|---|---|---|---|") {
-                                    l.add(DOCKER_IMAGES_TEMPLATE1.replace("VERSION", tagName), i + 1);
-                                    l.add(DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName), i + 1);
-                                    l.add(DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName), i + 1);
-                                    l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
+                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE1.replace("VERSION", tagName4Docker));
+                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE2.replace("VERSION", tagName4Docker));
+                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE3.replace("VERSION", tagName4Docker));
+                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName4Docker));
+                                    l.add(i + 1, DOCKER_IMAGES_TEMPLATE5.replace("VERSION", tagName4Docker));
                                     if (params.RELEASE != "8") {
-                                        l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName), i + 1);
+                                        l.add(DOCKER_IMAGES_TEMPLATE4.replace("VERSION", tagName4Docker), i + 1);
                                     }
                                     break;
                                 }
