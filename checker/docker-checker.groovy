@@ -34,10 +34,11 @@ pipeline {
                     }
                     steps {
                         script {
-                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}"
-                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_x86_64"
+                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_aarch64  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
-                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_x86_64_slim"
+                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_x86_64_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
                         }
                     }
@@ -48,10 +49,11 @@ pipeline {
                     }
                     steps {
                         script {
-                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}"
-                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_aarch64"
+                            def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_aarch64  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
-                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_aarch64_slim"
+                            version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_aarch64_slim  /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
                         }
                     }
@@ -62,7 +64,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_alpine"
+                            sh "docker pull registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_alpine_x86_64"
                             def version = sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${GITHUBTAG}_alpine /opt/alibaba/dragonwell${params.RELEASE}/bin/java -version", returnStdout: true).split()
                             print version
                         }
