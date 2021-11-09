@@ -30,7 +30,7 @@ pipeline {
             parallel {
                 stage("Test On Linux x64") {
                     agent {
-                        label "linux&&x64"
+                        label "linux&&x64&&ci.role.test"
                     }
                     steps {
                         script {
@@ -58,7 +58,7 @@ pipeline {
                 }
                 stage("Test On Linux x64 alpine") {
                     agent {
-                        label "linux&&x64"
+                        label "linux&&x64&&ci.role.test"
                     }
                     steps {
                         script {
