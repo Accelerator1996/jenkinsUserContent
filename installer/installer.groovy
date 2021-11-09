@@ -242,7 +242,7 @@ pipeline {
             steps {
                 script {
                     sh "rm -rf workspace/target/ || true"
-                    dir("/repp/dragonwell${params.RELEASE}") {
+                    dir("/repo/dragonwell${params.RELEASE}") {
                         sh "git fetch origin"
                         sh "git reset --hard origin/master"
                     }
