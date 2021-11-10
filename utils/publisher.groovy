@@ -10,7 +10,7 @@ pipeline {
                 success {
                     dingtalk (
                             robot: '2',
-                            type: '',
+                            type: 'MARKDOWN',
                             title: 'Dragonwell Weekly Report',
                             text: [
                                     '# Github 状态',
