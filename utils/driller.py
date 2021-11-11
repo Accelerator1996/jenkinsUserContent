@@ -41,8 +41,8 @@ if __name__ == "__main__":
         issue_link=""
         for line in commit.message.split("\n"):
             if 'Issue' in line:
-                issue_numeber = line.split("issues/")[-1].trim()
-                issue_url = line.split("Issue:")[-1].trim()
+                issue_numeber = line.split("issues/")[-1].strip()
+                issue_url = line.split("Issue:")[-1].strip()
                 issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
         if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
             table_data.append([commit.summary, issue_link])
