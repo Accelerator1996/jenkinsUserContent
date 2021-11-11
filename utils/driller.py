@@ -41,12 +41,14 @@ if __name__ == "__main__":
         issue_link=""
         for line in commit.message.split("\n"):
             if 'Issue' in line:
-                issue_link = line
+                issue_numeber = line.split("issues/")[-1].trim()
+                issue_url = line.split("Issue:")[-1].trim()
+                issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
         if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
             table_data.append([commit.summary, issue_link])
     writer = MarkdownTableWriter(
-        table_name="release_notes",
-        headers=["summary", "issue"],
+        table_name="Release Notes",
+        headers=["Summary", "Issue"],
         value_matrix=table_data
     )
     writer.write_table()
