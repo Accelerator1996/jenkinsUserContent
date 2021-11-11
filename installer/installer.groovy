@@ -269,7 +269,7 @@ pipeline {
                                 def lastRelease = card[1].get("tag_name")
                                 fromTag = "--fromtag ${lastRelease}"
                             }
-                            sh "wget https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/driller.py -O driller.py"
+                            sh "wget http://ci.dragonwell-jdk.io/userContent/utils/driller.py -O driller.py"
                             def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
                             def newReleasenotes = """
 # ${params.VERSION}
