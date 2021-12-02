@@ -288,23 +288,15 @@ ${gitLogReport}
                             sh "git add Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
                             sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md \""
                             sh "git push origin HEAD:master"
-                        }
-                        if (fileExists("阿里巴巴Dragonwell${params.RELEASE}发布说明.md")) {
-                            print "更新 ${params.VERSION} 到 发布说明中文版"
-                            releasenots = sh(script: "cat 阿里巴巴Dragonwell${params.RELEASE}发布说明.md", returnStdout: true).trim()
-                            def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
-                            def newReleasenotes = """
-# ${params.VERSION}
- ```
-${fullVersionOutput}
- ```
-${gitLogReport}
-                            """ + releasenots
-                            writeFile file: "阿里巴巴Dragonwell${params.RELEASE}发布说明.md", text: newReleasenotes
-                            sh "git add A阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
-                            sh "git commit -m \" update 阿里巴巴Dragonwell${params.RELEASE}发布说明.md \""
-                            sh "git push origin HEAD:master"
+                            if (fileExists("阿里巴巴Dragonwell${params.RELEASE}发布说明.md")) {
+                                print "更新 ${params.VERSION} 到 发布说明中文版"
+                                releasenots = sh(script: "cat 阿里巴巴Dragonwell${params.RELEASE}发布说明.md", returnStdout: true).trim()
+                                writeFile file: "阿里巴巴Dragonwell${params.RELEASE}发布说明.md", text: newReleasenotes
+                                sh "git add A阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
+                                sh "git commit -m \" update 阿里巴巴Dragonwell${params.RELEASE}发布说明.md \""
+                                sh "git push origin HEAD:master"
 
+                            }
                         }
 
                         print "更新docker镜像"
