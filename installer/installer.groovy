@@ -295,7 +295,8 @@ ${gitLogReport}
                                 sh "git add A阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
                                 sh "git commit -m \" update 阿里巴巴Dragonwell${params.RELEASE}发布说明.md \""
                                 sh "git push origin HEAD:master"
-
+                            } else {
+                                print "did not find 阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
                             }
                         }
 
