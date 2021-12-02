@@ -292,7 +292,7 @@ ${gitLogReport}
                                 print "更新 ${params.VERSION} 到 发布说明中文版"
                                 releasenots = sh(script: "cat 阿里巴巴Dragonwell${params.RELEASE}发布说明.md", returnStdout: true).trim()
                                 writeFile file: "阿里巴巴Dragonwell${params.RELEASE}发布说明.md", text: newReleasenotes
-                                sh "git add A阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
+                                sh "git add 阿里巴巴Dragonwell${params.RELEASE}发布说明.md"
                                 sh "git commit -m \" update 阿里巴巴Dragonwell${params.RELEASE}发布说明.md \""
                                 sh "git push origin HEAD:master"
                             } else {
