@@ -283,7 +283,7 @@ pipeline {
 ${fullVersionOutput}
  ```
 ${gitLogReport}
-                            """ + releasenots
+""" + releasenots
                             writeFile file: "Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", text: newReleasenotes
                             sh "git add Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
                             sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md \""
