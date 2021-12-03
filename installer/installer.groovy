@@ -276,7 +276,7 @@ pipeline {
                                 fromTag = "--fromtag ${lastRelease}"
                             }
                             sh "wget http://ci.dragonwell-jdk.io/userContent/utils/driller.py -O driller.py"
-                            def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master", returnStdout: true)
+                            def gitLogReport = sh(script: "python3 driller.py --repo /repo/dragonwell${params.RELEASE} ${fromTag} --totag master --release ${params.RELEASE}", returnStdout: true)
                             def newReleasenotes = """
 # ${params.VERSION}
  ```

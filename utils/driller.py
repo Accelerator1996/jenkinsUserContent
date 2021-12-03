@@ -20,6 +20,11 @@ def parse_argument():
         help='traverse git commits from'
     )
     parser.add_argument(
+        '--release',
+        default = None,
+        help='release version'
+    )
+    parser.add_argument(
         '--totag',
         default = None,
         help='traverse git commits to'
@@ -41,9 +46,14 @@ if __name__ == "__main__":
         issue_link=""
         for line in commit.message.split("\n"):
             if 'Issue' in line:
-                issue_numeber = line.split("issues/")[-1].strip()
-                issue_url = line.split("Issue:")[-1].strip()
-                issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
+                if 'https' in line:
+                    issue_numeber = line.split("issues/")[-1].strip()
+                    issue_url = line.split("Issue:")[-1].strip()
+                    issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
+                else:
+                    issue_numeber = line.split("#")[-1].strip()
+                    issue_url = "https://github.com/alibaba/dragonwell" +args.release + "/issues/" + issue_numeber
+                    issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
         if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
             table_data.append([commit.summary, issue_link])
     writer = MarkdownTableWriter(
