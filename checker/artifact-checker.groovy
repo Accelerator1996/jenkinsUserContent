@@ -126,6 +126,7 @@ def checkArtifactContent(platform) {
                 def (res, val) = validateCheckSum("${originFile}", "${pkg_name}")
                 addResult("Check${platform}Text", res, resultMsg("checksum", [val, res]))
                 sh "rm -rf ${originFile} ${pkg_name}"
+                continue
             } else if ("${suffix}" == "gz") {
                 suffix = "tar.gz"
             }
