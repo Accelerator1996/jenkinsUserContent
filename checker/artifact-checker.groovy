@@ -120,6 +120,7 @@ def checkArtifactContent(platform) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
                 echo "checksum file is ${pkg_name}"
+                sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O ${pkg_name}"
                 def (res, val) = validateCheckSum("jdk.tar.gz", "${pkg_name}")
                 addResult("Check${platform}Text", res, resultMsg("checksum", [val, res]))
                 sh "rm -rf jdk.txt jdk.tar.gz"
