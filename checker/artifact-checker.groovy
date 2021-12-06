@@ -131,10 +131,7 @@ def checkArtifactContent(platform) {
             sh "${unzipCommand} jdk.${suffix}"
 
             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-            def check_dirname = java_home.contains(publishtag)
-            if (check_dirname == false) {
-                error "compress package dirname is wrong"
-            }
+            unzippedDirCheck()
             def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
             addResult("CheckLinuxX64CompressedPackage", res, resultMsg(1, ""))
             sh "rm -rf ${java_home}"
@@ -142,6 +139,32 @@ def checkArtifactContent(platform) {
     }
 }
 
+
+def unzippedDirCheck() {
+    def check_dirname = false;
+    if (params.RELEASE == "17") {
+        check_dirname = java_home.contains(publishtag)
+    } else if (params.RELEASE == "8") {
+        check_dirname = java_home.contains(strippedOpenJDKTagWithoutBuildNumber(openjdktag))
+    } else if (params.RELEASE == "11" ) {
+        check_dirname = java_home.contains(strippedOpenJDKTagWithoutBuildNumber(openjdktag))
+    }
+    if (check_dirname == false) {
+        error "compress package dirname is wrong"
+    }
+
+}
+
+
+def strippedOpenJDKTagWithoutBuildNumber(ot) {
+    // 11
+    if (ot.contains("+")) {
+        return ot.split("+")[0]
+    } else {
+        //8
+        return ot.split("-")[0]
+    }
+}
 
 /**
  * Check the latest release
@@ -162,10 +185,10 @@ pipeline {
             steps {
                 script {
                     URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
-                    URL openjdkUrl = new URL("https://api.github.com/repos/adoptium/temurin${params.RELEASE}-binaries/releases/latest")
+                    URL openjdkUrl = new URL("https://api.adoptium.net/v3/assets/latest/${params.RELEASE}/hotspot?vendor=eclipse")
                     def card = new JsonSlurper().parse(apiUrl)
                     def openjdk_card = new JsonSlurper().parse(openjdkUrl)
-                    openjdktag = openjdk_card.get("tag_name")
+                    openjdktag = openjdk_card.get("release_name")
                     def arr = []
                     githubtag = card[0].get("tag_name")
                     publishtag = githubtag.split("-")[1].split("_jdk")[0]
