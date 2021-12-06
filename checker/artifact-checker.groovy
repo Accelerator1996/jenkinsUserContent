@@ -1,7 +1,7 @@
 import net.sf.json.groovy.JsonSlurper
 import groovy.json.*
 
-def pkgs = []
+@groovy.transform.Field def pkgs = []
 @groovy.transform.Field def githubtag = ""
 @groovy.transform.Field def publishtag = ""
 @groovy.transform.Field def openjdktag = ""
