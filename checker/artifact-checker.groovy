@@ -170,7 +170,7 @@ def strippedOpenJDKTagWithoutBuildNumber(ot) {
     echo "striping ${ot}"
     // 11
     if (ot.contains("+")) {
-        def result = ot.split("+")[0]
+        def result = ot.split("\\+")[0]
         echo "stripped ${result}"
         return result
     } else {
