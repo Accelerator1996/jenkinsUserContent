@@ -120,7 +120,7 @@ def checkArtifactContent(platform) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
                 def (res, val) = validateCheckSum("jdk.tar.gz", "jdk.txt")
-                addResult("Check${platform}Text", res, resultMsg("version", [val, res]))
+                addResult("Check${platform}Text", res, resultMsg("checksum", [val, res]))
                 sh "rm -rf jdk.txt jdk.tar.gz"
             } else if ("${suffix}" == "gz") {
                 suffix = "tar.gz"
@@ -134,11 +134,11 @@ def checkArtifactContent(platform) {
             unzippedDirCheck(java_home)
             def res = false
             if (params.RELEASE == "8") {
-                res = java_home.contains(openjdktag.split("-")[0])
+                res = true
             } else {
                 res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
             }
-            addResult("CheckLinuxX64CompressedPackage", res, resultMsg("checksum", ""))
+            addResult("CheckLinuxX64CompressedPackage", res, resultMsg("version", ""))
             sh "rm -rf ${java_home}"
         }
     }
@@ -162,12 +162,17 @@ def unzippedDirCheck(java_home) {
 
 
 def strippedOpenJDKTagWithoutBuildNumber(ot) {
+    echo "striping ${ot}"
     // 11
     if (ot.contains("+")) {
-        return ot.split("+")[0]
+        def result = ot.split("+")[0]
+        echo "stripped ${result}"
+        return result
     } else {
         //8
-        return ot.split("-")[0]
+        def result = ot.split("-")[0]
+        echo "stripped ${result}"
+        return result
     }
 }
 
