@@ -28,7 +28,7 @@ def addResult(test, result, msg) {
 
 def resultMsg(mode, input) {
     def msg = ""
-    if (mode == 1) {
+    if (mode == "version") {
         if (publishtag.split("\\+").size() > 2 && openjdktag.split("\\+").size() > 2 && publishtag.split("\\.") > 4) {
             // mode 1: output msg is about publish tag
             def build_num = publishtag.split("\\+")[1]
@@ -42,7 +42,7 @@ update-release counter:${arr[2]}  emergency patch-release counter:${arr[3]}</br>
 build number:${build_num}
 """
         }
-    } else if (mode == 2) {
+    } else if (mode == "checksum") {
         // mode 2: output message is about validate text
         msg = """
 sha256 value: ${input[0]}</br>
@@ -120,7 +120,7 @@ def checkArtifactContent(platform) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
                 def (res, val) = validateCheckSum("jdk.tar.gz", "jdk.txt")
-                addResult("Check${platform}Text", res, resultMsg(2, [val, res]))
+                addResult("Check${platform}Text", res, resultMsg("version", [val, res]))
                 sh "rm -rf jdk.txt jdk.tar.gz"
             } else if ("${suffix}" == "gz") {
                 suffix = "tar.gz"
@@ -133,7 +133,7 @@ def checkArtifactContent(platform) {
             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
             unzippedDirCheck(java_home)
             def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
-            addResult("CheckLinuxX64CompressedPackage", res, resultMsg(1, ""))
+            addResult("CheckLinuxX64CompressedPackage", res, resultMsg("checksum", ""))
             sh "rm -rf ${java_home}"
         }
     }
