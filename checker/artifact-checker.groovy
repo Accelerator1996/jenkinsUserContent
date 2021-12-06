@@ -31,7 +31,7 @@ def addResult(test, result, msg) {
 def resultMsg(mode, input) {
     def msg = ""
     if (mode == 1) {
-        if (publishtag.size() > 2 && openjdktag.size() > 2) {
+        if (publishtag.split("\\+").size() > 2 && openjdktag.split("\\+").size() > 2 && publishtag.split("\\.") > 4) {
             // mode 1: output msg is about publish tag
             def build_num = publishtag.split("\\+")[1]
             def arr = publishtag.split("\\.")
