@@ -332,13 +332,24 @@ ${gitLogReport}
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
-                        def fineName = "\'Mirrors-for-download-(下载镜像).md\'"
+                        def fineName
+                        if (params.RELEASE == "8") {
+                            fineName = "\'下载镜像(Mirrors-for-download).md\'"
+                        } else {
+                            fineName = "\'Mirrors-for-download-(下载镜像).md\'"
+                        }
+
                         def osslinks = sh(script: "cat $fineName", returnStdout: true).trim()
                         print "oss links ${osslinks}"
                         if (!osslinks.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到下载镜像"
-                            writeFile file: 'Mirrors-for-download-(下载镜像).md', text: (MIRROS_DOWNLOAD_TEMPLATE + osslinks)
-                            sh "git add 'Mirrors-for-download-(下载镜像).md'"
+                            if (params.RELEASE == "8") {
+                                writeFile file: '下载镜像(Mirrors-for-download).md', text: (MIRROS_DOWNLOAD_TEMPLATE + osslinks)
+                                sh "git add '下载镜像(Mirrors-for-download).md'"
+                            } else {
+                                writeFile file: 'Mirrors-for-download-(下载镜像).md', text: (MIRROS_DOWNLOAD_TEMPLATE + osslinks)
+                                sh "git add 'Mirrors-for-download-(下载镜像).md'"
+                            }
                             sh "git commit -m \" update Mirrors for download\""
                             sh "git push origin HEAD:master"
                         }
