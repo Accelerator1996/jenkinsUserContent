@@ -306,9 +306,9 @@ ${gitLogReport}
 
                         def dockerimages
                         if (params.RELEASE == "8") {
-                            sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-image.md", returnStdout: true).trim()
+                            dockerimages = sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-image.md", returnStdout: true).trim()
                         } else {
-                            sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", returnStdout: true).trim()
+                            dockerimages = sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", returnStdout: true).trim()
                         }
 
                         if (!dockerimages.contains("${tagName4Docker}")) {
