@@ -119,7 +119,8 @@ def checkArtifactContent(platform) {
         if (pkg_name.matches(".*${platform}.*")) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
-                def (res, val) = validateCheckSum("jdk.tar.gz", "jdk.txt")
+                echo "checksum file is ${pkg_name}"
+                def (res, val) = validateCheckSum("jdk.tar.gz", "${pkg_name}")
                 addResult("Check${platform}Text", res, resultMsg("checksum", [val, res]))
                 sh "rm -rf jdk.txt jdk.tar.gz"
             } else if ("${suffix}" == "gz") {
