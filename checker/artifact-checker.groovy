@@ -114,8 +114,8 @@ def validateCheckSum(pkg_name, cmp_file) {
 
 def checkArtifactContent(platform) {
     sh "wget -q https://raw.githubusercontent.com/dragonwell-releng/jenkinsUserContent/master/utils/check_tag.sh"
-    def pkg_name = pkg.get("name")
     for (pkg in pkgs) {
+        def pkg_name = pkg.get("name")
         if (pkg_name.matches(".*${platform}.*")) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
