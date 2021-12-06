@@ -9,6 +9,10 @@ TOKEN = "ghp_KI10VDceecSlImTXHnhK0cWm7prLUc0oFsU" + "S"
 RELEASE_MAP = [:]
 CHECKSUM_MAP = [:]
 
+def slash = "-"
+if (params.RELEASE == "8")
+    slash = ""
+
 def tagName4Docker = params.GITHUBTAG
 def versionName4OSS = params.VERSION
 if (params.RELEASE == "17") {
@@ -263,9 +267,6 @@ pipeline {
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName4Docker}_x86_64_slim java -version 2> tmpt")
                         def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).trim()
                         print "fullversion is ${fullVersionOutput}"
-                        def slash = "-"
-                        if (params.RELEASE == "8")
-                            slash = ""
                         def releasenots = sh(script: "cat Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
@@ -302,7 +303,7 @@ ${gitLogReport}
                         }
 
                         print "更新docker镜像"
-                        def dockerimages = sh(script: "cat Use-Dragonwell-${params.RELEASE}-docker-images.md", returnStdout: true).trim()
+                        def dockerimages = sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", returnStdout: true).trim()
 
                         if (!dockerimages.contains("${tagName4Docker}")) {
                             print "更新 ${tagName4Docker} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
