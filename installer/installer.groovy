@@ -23,9 +23,8 @@ DOCKER_IMAGES_TEMPLATE3 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragon
 DOCKER_IMAGES_TEMPLATE4 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_aarch64_slim | aarch64 | centos | Yes |"
 DOCKER_IMAGES_TEMPLATE5 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_alpine_x86_64 | x86_64 | alpine | No |"
 
-
-MIRROS_DOWNLOAD_TEMPLATE = """
-
+if (params.RELEASE == "8") {
+    MIRROS_DOWNLOAD_TEMPLATE = """
 # ${params.VERSION}
 
 | File name | China mainland | United States |
@@ -35,6 +34,18 @@ MIRROS_DOWNLOAD_TEMPLATE = """
 | Alibaba_Dragonwell_jdk-${params.VERSION}_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_x64_linux.tar.gz) |
 | Alibaba_Dragonwell_jdk-${params.VERSION}_x86_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_x86_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_x86_windows.zip) |
 """
+} else {
+    MIRROS_DOWNLOAD_TEMPLATE = """
+# ${params.VERSION}
+
+| File name | China mainland | United States |
+|---|---|---|
+| Alibaba_Dragonwell_jdk-${params.VERSION}_aarch64_linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_aarch64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_aarch64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64_alpine-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_x64_alpine-linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_x64_alpine-linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64-linux.tar.gz | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_x64_linux.tar.gz) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_x64_linux.tar.gz) |
+| Alibaba_Dragonwell_jdk-${params.VERSION}_x64_windows.zip | [download](https://dragonwell.oss-cn-shanghai.aliyuncs.com/${versionName4OSS}/Alibaba_Dragonwell_${versionName4OSS}_x64_windows.zip) | [download](https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${params.GITHUBTAG}/Alibaba_Dragonwell_${versionName4OSS}_x64_windows.zip) |
+"""
+}
 
 
 if (params.RELEASE == "8") {
@@ -54,7 +65,7 @@ if (params.RELEASE == "8") {
 } else {
     PARENT_JOB_NAME = ""
     JDK_NAME = ""
-    PLATFORMS = ["x64_linux", "x64_windows", "x64_alpine-linux", "aarch64_linux"]
+    PLATFORMS = ["x64_linux", "x86_windows", "x64_alpine-linux", "aarch64_linux"]
     REPO = "dragonwell17"
     HEAD = "OpenJDK17-jdk"
     BUILDER = "http://ci.dragonwell-jdk.io/userContent/utils/build17.sh"
@@ -153,18 +164,12 @@ pipeline {
                                 final p = file =~ /${tarPattern}/
                                 final checksum = file =~ /${checkPattern}/
                                 if (p.matches()) {
-                                    if (platform == "x64_windows") {
-                                        platform = "x86_windows"
-                                    }
                                     def releaseFile = "Alibaba_Dragonwell_${params.VERSION}_${platform}.${tailPattern}"
                                     sh "mv ${file} ${releaseFile}"
                                     sh "${OSS_TOOL} cp -f ${releaseFile} oss://dragonwell/${params.VERSION}/${releaseFile}"
                                     print "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                     RELEASE_MAP["${releaseFile}"] = "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                 } else if (checksum.matches()) {
-                                    if (platform == "x64_windows") {
-                                        platform = "x86_windows"
-                                    }
                                     def releaseFile = "Alibaba_Dragonwell_${params.VERSION}_${platform}.${tailPattern}.sha256.txt"
                                     sh "mv ${file} ${releaseFile}"
                                     sh "${OSS_TOOL} cp -f ${releaseFile} oss://dragonwell/${params.VERSION}/${releaseFile}"
@@ -253,13 +258,6 @@ pipeline {
                         sh "git reset --hard origin/master"
                     }
                     dir("/root/wiki/dragonwell${params.RELEASE}.wiki") {
-//                        copyArtifacts(
-//                                projectName: "build-scripts/openjdk${params.RELEASE}-pipeline",
-//                                filter: "**/${HEAD}*dragonwell*tar.gz*json",
-//                                selector: specific("${params.BUILDNUMBER}"),
-//                                fingerprintArtifacts: true,
-//                                target: "/root/wiki/dragonwell${params.RELEASE}.wiki",
-//                                flatten: true)
                         print "更新ReleaseNotes"
                         sh "git fetch origin && git reset --hard origin/master"
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName4Docker}_x86_64_slim java -version 2> tmpt")
