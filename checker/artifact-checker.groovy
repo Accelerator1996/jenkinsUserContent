@@ -10,7 +10,7 @@ def pkgs = []
 if ("${params.RELEASE}" == "17") {
     platforms = ["aarch64_linux", "x64_alpine-linux", "x64_linux", "x86_windows"]
 } else {
-    platforms = ["aarch64_linux", "x64_alpine-linux", "x64_linux", "x64_windows"]
+    platforms = ["aarch64_linux", "x64_linux", "x64_windows"]
 }
 @groovy.transform.Field def pkg_list = []
 @groovy.transform.Field def txt_list = []
