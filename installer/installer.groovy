@@ -303,7 +303,13 @@ ${gitLogReport}
                         }
 
                         print "更新docker镜像"
-                        def dockerimages = sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", returnStdout: true).trim()
+
+                        def dockerimages
+                        if (params.RELEASE == "8") {
+                            sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-image.md", returnStdout: true).trim()
+                        } else {
+                            sh(script: "cat Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", returnStdout: true).trim()
+                        }
 
                         if (!dockerimages.contains("${tagName4Docker}")) {
                             print "更新 ${tagName4Docker} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
