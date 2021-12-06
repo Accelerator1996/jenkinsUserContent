@@ -263,7 +263,10 @@ pipeline {
                         sh(script: "docker run  registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:${tagName4Docker}_x86_64_slim java -version 2> tmpt")
                         def fullVersionOutput = sh(script: "cat tmpt", returnStdout: true).trim()
                         print "fullversion is ${fullVersionOutput}"
-                        def releasenots = sh(script: "cat Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
+                        def slash = "-"
+                        if (params.RELEASE == "8")
+                            slash = ""
+                        def releasenots = sh(script: "cat Alibaba-Dragonwell${slash}{params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
                             print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
                             URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
