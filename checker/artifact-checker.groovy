@@ -131,7 +131,7 @@ def checkArtifactContent(platform) {
             sh "${unzipCommand} jdk.${suffix}"
 
             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-            unzippedDirCheck()
+            unzippedDirCheck(java_home)
             def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
             addResult("CheckLinuxX64CompressedPackage", res, resultMsg(1, ""))
             sh "rm -rf ${java_home}"
@@ -140,7 +140,7 @@ def checkArtifactContent(platform) {
 }
 
 
-def unzippedDirCheck() {
+def unzippedDirCheck(java_home) {
     def check_dirname = false;
     if (params.RELEASE == "17") {
         check_dirname = java_home.contains(publishtag)
@@ -185,10 +185,11 @@ pipeline {
             steps {
                 script {
                     URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
+                    echo "https://api.adoptium.net/v3/assets/latest/${params.RELEASE}/hotspot?vendor=eclipse"
                     URL openjdkUrl = new URL("https://api.adoptium.net/v3/assets/latest/${params.RELEASE}/hotspot?vendor=eclipse")
-                    def card = new JsonSlurper().parse(apiUrl)
-                    def openjdk_card = new JsonSlurper().parse(openjdkUrl)
-                    openjdktag = openjdk_card.get("release_name")
+                    def card = new JsonSlurper().parseText(apiUrl.text.trim())
+                    def openjdk_card = new JsonSlurper().parseText(openjdkUrl.text.trim())
+                    openjdktag = openjdk_card[0].get("release_name")
                     def arr = []
                     githubtag = card[0].get("tag_name")
                     publishtag = githubtag.split("-")[1].split("_jdk")[0]
