@@ -186,15 +186,17 @@ pipeline {
                                         sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O jdk.${suffix}"
                                         if ("${suffix}" == "zip") {
                                             sh "unzip jdk.zip"
-                                            def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-                                            def check_dirname = java_home.contains(publishtag)
-                                            if (check_dirname == false) {
-                                                error "compress package dirname is wrong"
+                                            if (params.DRAGONWELL == false) {
+                                                def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
+                                                def check_dirname = java_home.contains(publishtag)
+                                                if (check_dirname == false) {
+                                                    error "compress package dirname is wrong"
+                                                }
+                                                def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                                                if (res != true) res = false
+                                                addResult("CheckWindowsCompressedPackage", res, resultMsg(1, ""))
+                                                sh "rm -rf ${java_home}"
                                             }
-                                            def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
-                                            if (res != true) res = false
-                                            addResult("CheckWindowsCompressedPackage", res, resultMsg(1, ""))
-                                            sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             def (res, val) = validateFile("jdk.zip", "jdk.txt")
                                             addResult("CheckWindowsValidateText", res, resultMsg(2, [val, res]))
@@ -228,15 +230,17 @@ pipeline {
                                         sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O jdk.${suffix}"
                                         if ("${suffix}" == "zip") {
                                             sh "unzip jdk.zip"
-                                            def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-                                            def check_dirname = java_home.contains(publishtag)
-                                            if (check_dirname == false) {
-                                                error "compress package dirname is wrong"
+                                            if (params.DRAGONWELL == false) {
+                                                def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
+                                                def check_dirname = java_home.contains(publishtag)
+                                                if (check_dirname == false) {
+                                                    error "compress package dirname is wrong"
+                                                }
+                                                def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                                                if (res != true) res = false
+                                                addResult("CheckLinuxX64CompressedPackage", res, resultMsg(1, ""))
+                                                sh "rm -rf ${java_home}"
                                             }
-                                            def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
-                                            if (res != true) res = false
-                                            addResult("CheckLinuxX64CompressedPackage", res, resultMsg(1, ""))
-                                            sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             def (res, val) = validateFile("jdk.tar.gz", "jdk.txt")
                                             addResult("CheckLinuxX64ValidateText", res, resultMsg(2, [val, res]))
@@ -279,15 +283,17 @@ pipeline {
                                         sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O jdk.${suffix}"
                                         if ("${suffix}" == "zip") {
                                             sh "unzip -q jdk.zip"
-                                            def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-                                            def check_dirname = java_home.contains(publishtag)
-                                            if (check_dirname == false) {
-                                                error "compress package dirname is wrong"
+                                            if (params.DRAGONWELL == false) {
+                                                def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
+                                                def check_dirname = java_home.contains(publishtag)
+                                                if (check_dirname == false) {
+                                                    error "compress package dirname is wrong"
+                                                }
+                                                def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                                                if (res != true) res = false
+                                                addResult("CheckLinuxAarch64CompressedPackage", res, resultMsg(1, ""))
+                                                sh "rm -rf ${java_home}"
                                             }
-                                            def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
-                                            if (res != true) res = false
-                                            addResult("CheckLinuxAarch64CompressedPackage", res, resultMsg(1, ""))
-                                            sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             def (res, val) = validateFile("jdk.tar.gz", "jdk.txt")
                                             addResult("CheckLinuxAarch64ValidateText", res, resultMsg(2, [val, res]))
@@ -330,15 +336,17 @@ pipeline {
                                         sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O jdk.${suffix}"
                                         if ("${suffix}" == "zip") {
                                             sh "unzip jdk.zip"
-                                            def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
-                                            def check_dirname = java_home.contains(publishtag)
-                                            if (check_dirname == false) {
-                                                error "compress package dirname is wrong"
+                                            if (params.DRAGONWELL == false) {
+                                                def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
+                                                def check_dirname = java_home.contains(publishtag)
+                                                if (check_dirname == false) {
+                                                    error "compress package dirname is wrong"
+                                                }
+                                                def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                                                if (res != true) res = false
+                                                addResult("CheckLinuxX64AlpineCompressedPackage", res, resultMsg(1, ""))
+                                                sh "rm -rf ${java_home}"
                                             }
-                                            def res = sh returnStdout: true, script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
-                                            if (res != true) res = false
-                                            addResult("CheckLinuxX64AlpineCompressedPackage", res, resultMsg(1, ""))
-                                            sh "rm -rf ${java_home}"
                                         } else if ("${suffix}" == "txt") {
                                             def (res, val) = validateFile("jdk.tar.gz", "jdk.txt")
                                             addResult("CheckLinuxX64AlpineValidateText", res, resultMsg(2, [val, res]))
