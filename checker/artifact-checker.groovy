@@ -139,7 +139,7 @@ def checkArtifactContent(platform) {
             unzippedDirCheck(java_home)
             def res = false
             if (params.RELEASE == "8") {
-                res = true
+                res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
             } else {
                 res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
             }
