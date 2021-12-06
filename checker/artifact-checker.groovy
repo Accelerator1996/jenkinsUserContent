@@ -122,6 +122,9 @@ pipeline {
     agent none
     parameters {
         choice(name: 'RELEASE', choices: '17\n11\n8\n', description: 'Use which Multiplexing')
+        booleanParam(defaultValue: false,
+                description: 'Use Dragonwell check rule',
+                name: 'DRAGONWELL')
     }
     stages {
         stage('Check Github Artifact format') {
@@ -138,6 +141,9 @@ pipeline {
                     def arr = []
                     githubtag = card[0].get("tag_name")
                     publishtag = githubtag.split("-")[1].split("_jdk")[0]
+
+                    echo "publish tags ${publishtag}"
+                    echo "openjdktag tags ${openjdktag}"
                     def prerelease = card[0].get("prerelease")
                     def draft = card[0].get("draft")
                     if (draft == true || prerelease == false) {
