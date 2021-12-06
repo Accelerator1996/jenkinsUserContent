@@ -120,7 +120,7 @@ def checkArtifactContent(platform) {
             def suffix = pkg_name.tokenize("\\.").pop()
             if ("${suffix}" == "txt") {
                 echo "checksum file is ${pkg_name}"
-                def originFile = pkg_name.replace("sha256.txt", "")
+                def originFile = pkg_name.replace(".sha256.txt", "")
                 sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${pkg_name} -O ${pkg_name}"
                 sh "wget -q https://github.com/alibaba/dragonwell${params.RELEASE}/releases/download/${githubtag}/${originFile} -O ${originFile}"
                 def (res, val) = validateCheckSum("${originFile}", "${pkg_name}")
