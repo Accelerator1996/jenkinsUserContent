@@ -7,7 +7,7 @@ def pkgs = []
 @groovy.transform.Field def publishtag = ""
 @groovy.transform.Field def openjdktag = ""
 @groovy.transform.Field def platforms = []
-if ("${params.RELEASE}" == "17") {
+if ("${params.RELEASE}" == "17" || "${params.RELEASE}" == "11") {
     platforms = ["aarch64_linux", "x64_alpine-linux", "x64_linux", "x86_windows"]
 } else {
     platforms = ["aarch64_linux", "x64_linux", "x64_windows"]
