@@ -31,17 +31,19 @@ def addResult(test, result, msg) {
 def resultMsg(mode, input) {
     def msg = ""
     if (mode == 1) {
-        // mode 1: output msg is about publish tag
-        def build_num = publishtag.split("\\+")[1]
-        def arr = publishtag.split("\\.")
-        def ups_tag = openjdktag.split("jdk-")[1]
-        msg = """
+        if (publishtag.size() > 2 && openjdktag.size() > 2) {
+            // mode 1: output msg is about publish tag
+            def build_num = publishtag.split("\\+")[1]
+            def arr = publishtag.split("\\.")
+            def ups_tag = openjdktag.split("jdk-")[1]
+            msg = """
 upstream tag: ${ups_tag}</br>
 current tag: ${publishtag}</br>
 feature-release counter:${arr[0]}  interim-release counter:${arr[1]}</br>
 update-release counter:${arr[2]}  emergency patch-release counter:${arr[3]}</br>
 build number:${build_num}
 """
+        }
     } else if (mode == 2) {
         // mode 2: output message is about validate text
         msg = """
