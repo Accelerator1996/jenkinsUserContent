@@ -65,7 +65,7 @@ pipeline {
                         }
                     }
                     agent {
-                        label "linux&&x64&&ci.role.test&&dockerChecker"
+                        label "linux&&x64&&dockerChecker"
                     }
                     steps {
                         script {
