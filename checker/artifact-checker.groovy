@@ -139,7 +139,7 @@ def checkArtifactContent(platform) {
             java_home = java_home.trim()
             unzippedDirCheck(java_home)
             if (platform != "alpine") {
-                def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home} ${openjdktag}"
                 addResult("Check${platform}CompressedPackage", res, resultMsg("version", ""))
             }
             sh "rm -rf ${java_home}"
