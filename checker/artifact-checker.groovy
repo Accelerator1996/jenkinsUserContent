@@ -138,13 +138,10 @@ def checkArtifactContent(platform) {
             def java_home = sh returnStdout: true, script: "ls . | grep jdk | grep -v ${suffix}"
             java_home = java_home.trim()
             unzippedDirCheck(java_home)
-            def res = false
-            if (params.RELEASE == "8") {
-                res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home} ${openjdktag}"
-            } else {
-                res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home} ${openjdktag}"
+            if (platform != "alpine") {
+                def res = sh script: "bash check_tag.sh ${publishtag} ${params.RELEASE} ${java_home}"
+                addResult("Check${platform}CompressedPackage", res, resultMsg("version", ""))
             }
-            addResult("CheckLinuxX64CompressedPackage", res, resultMsg("version", ""))
             sh "rm -rf ${java_home}"
         }
     }
