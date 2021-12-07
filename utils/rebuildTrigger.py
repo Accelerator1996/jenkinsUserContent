@@ -5,7 +5,6 @@ import os
 import subprocess
 from pytablewriter import MarkdownTableWriter
 
-
 def parse_argument():
     parser = argparse.ArgumentParser(
         description = "Analyse options for gitDriller.",
@@ -31,39 +30,32 @@ def parse_argument():
         default = None,
         help='traverse git commits to'
     )
-    parser.add_argument(
-        '--hash',
-        default = None,
-        help='git commit hash'
-    )
     args = parser.parse_args()
     return args
 
 def exec_shell(cmd, cwd=".", timeout=120, display=False):
-  sb = subprocess.Popen(cmd,
-                   cwd=cwd,
-                   stdin=subprocess.PIPE,
-                   stdout=subprocess.PIPE,
-                   stderr=subprocess.PIPE,
-                   shell=True
-                   )
-  if display:
-    log.info("exec shell command in {}: {}".format(cwd, cmd))
-  out, err, retv = "", "", -999
-  try:
-    out, err = sb.communicate(timeout=timeout)
-  except TimeoutExpired:
-    sb.kill()
-  finally:
-    retv = sb.returncode
-    return out, err, retv
+    sb = subprocess.Popen(cmd,
+                          cwd=cwd,
+                          stdin=subprocess.PIPE,
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE,
+                          shell=True
+                          )
+    if display:
+        log.info("exec shell command in {}: {}".format(cwd, cmd))
+    out, err, retv = "", "", -999
+    try:
+        out, err = sb.communicate(timeout=timeout)
+    except TimeoutExpired:
+        sb.kill()
+    finally:
+        retv = sb.returncode
+        return out, err, retv
 
 if __name__ == "__main__":
     args = parse_argument()
     table_data = []
-    paths = [""]
-    if ("dragonwell8" in args.repo):
-        paths.append(["jdk", "hotspot"])
+    paths = ["", "jdk", "hotspot"]
     for path in paths:
         repo_dir = os.path.join(args.repo, path)
         repo = git.Repo(repo_dir)
