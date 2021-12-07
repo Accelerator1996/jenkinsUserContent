@@ -30,7 +30,7 @@ pipeline {
             parallel {
                 stage("Test On Linux x64") {
                     agent {
-                        label "linux&&x64&&ci.role.test"
+                        label "linux&&x64&&dockerChecker"
                     }
                     steps {
                         script {
@@ -45,7 +45,7 @@ pipeline {
                 }
                 stage("Test On Linux aarch64") {
                     agent {
-                        label "linux&&aarch64"
+                        label "linux&&aarch64&&dockerChecker"
                     }
                     steps {
                         script {
@@ -59,8 +59,13 @@ pipeline {
                     }
                 }
                 stage("Test On Linux x64 alpine") {
+                    when {
+                        expression {
+                            params.RELEASE != "8"
+                        }
+                    }
                     agent {
-                        label "linux&&x64&&ci.role.test"
+                        label "linux&&x64&&ci.role.test&&dockerChecker"
                     }
                     steps {
                         script {
