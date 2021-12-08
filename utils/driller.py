@@ -76,7 +76,7 @@ if __name__ == "__main__":
         for commit in repo.iter_commits(rev=revstr):
             summary=""
             issue_link=""
-            if "openjdk.org" in commit.author.email:
+            if "alibaba" not in commit.author.email and "joeylee97" not in commit.author.email:
                 upstream_patches.append(commit.summary)
                 continue
             for line in commit.message.split("\n"):
