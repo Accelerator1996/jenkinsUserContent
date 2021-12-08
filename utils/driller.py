@@ -106,6 +106,7 @@ if __name__ == "__main__":
         value_matrix=table_data
     )
     writer.write_table()
-    print("upstream : ", len(upstream_patches))
+    print("dragonwell_patches : ", len(table_data))
+    print("upstream_patches : ", len(upstream_patches))
     print("malformed_patches : ", len(malformed_patches))
     print("internal_patches : ", len(internal_patches))
