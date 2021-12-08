@@ -63,6 +63,7 @@ if __name__ == "__main__":
     table_data = []
     paths = [""]
 
+    upstream_patches=[]
     internal_patches=[]
     malformed_patches=[]
 
@@ -75,6 +76,9 @@ if __name__ == "__main__":
         for commit in repo.iter_commits(rev=revstr):
             summary=""
             issue_link=""
+            if "openjdk.org" in commit.author.email:
+                upstream_patches.append(commit.summary)
+                continue
             for line in commit.message.split("\n"):
                 if 'Issue' in line:
                     if 'https' in line:
@@ -102,5 +106,6 @@ if __name__ == "__main__":
         value_matrix=table_data
     )
     writer.write_table()
+    print("upstream : ", len(upstream_patches))
     print("malformed_patches : ", len(malformed_patches))
     print("internal_patches : ", len(internal_patches))
