@@ -67,11 +67,7 @@ if __name__ == "__main__":
     for path in paths:
         repo_dir = os.path.join(args.repo, path)
         repo = git.Repo(repo_dir)
-        fromtag, err, retv = exec_shell("git tag --sort=committerdate | tail -n 2 | head -n 1", repo_dir)
-        totag, err, retv = exec_shell("git tag --sort=committerdate | tail -n 1", repo_dir)
-        fromtag = bytes.decode(fromtag).strip()
-        totag = bytes.decode(totag).strip()
-        revstr = "{}...{}".format(fromtag, totag)
+        revstr = "{}...master".format(args.fromtag)
         for commit in repo.iter_commits(rev=revstr):
             summary=""
             issue_link=""
