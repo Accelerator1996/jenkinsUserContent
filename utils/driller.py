@@ -85,6 +85,8 @@ if __name__ == "__main__":
                         issue_numeber = line.split("#")[-1].strip()
                         issue_url = "https://github.com/alibaba/dragonwell" +args.release + "/issues/" + issue_numeber
                         issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
+            if "alibaba-inc" in issue_link:
+                continue
             if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
                 table_data.append([commit.summary, issue_link])
     writer = MarkdownTableWriter(
