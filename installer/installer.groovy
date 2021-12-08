@@ -274,7 +274,7 @@ pipeline {
                             def card = new JsonSlurper().parse(apiUrl)
                             def fromTag = ""
                             if (card.size() > 1) {
-                                def lastRelease = card[0].get("tag_name")
+                                def lastRelease = card[1].get("tag_name")
                                 fromTag = "--fromtag ${lastRelease}"
                             }
                             sh "wget http://ci.dragonwell-jdk.io/userContent/utils/driller.py -O driller.py"
