@@ -62,6 +62,10 @@ if __name__ == "__main__":
     args = parse_argument()
     table_data = []
     paths = [""]
+
+    internal_patches=[]
+    malformed_patches=[]
+
     if ("dragonwell8" in args.repo):
         paths.append(["jdk", "hotspot"])
     for path in paths:
@@ -78,10 +82,17 @@ if __name__ == "__main__":
                         issue_url = line.split("Issue:")[-1].strip()
                         issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
                     else:
+                        if (line == line.split("#")[-1].strip()):
+                            malformed_patches.append(commit.summary)
+                            continue
                         issue_numeber = line.split("#")[-1].strip()
                         issue_url = "https://github.com/alibaba/dragonwell" +args.release + "/issues/" + issue_numeber
                         issue_link = "[Issue #" + issue_numeber + "](" + issue_url  +")"
-            if "alibaba-inc" in issue_link or len(issue_link) == 0:
+            if "alibaba-inc" in issue_link:
+                internal_patches.append(commit.summary)
+                continue
+            if len(issue_link) == 0:
+                malformed_patches.append(commit.summary)
                 continue
             if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
                 table_data.append([commit.summary, issue_link])
@@ -91,3 +102,5 @@ if __name__ == "__main__":
         value_matrix=table_data
     )
     writer.write_table()
+    print("malformed_patches : ", len(malformed_patches))
+    print("internal_patches : ", len(internal_patches))
