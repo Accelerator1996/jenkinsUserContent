@@ -22,6 +22,7 @@ pipeline {
                         sh "wget http://ci.dragonwell-jdk.io/userContent/utils/rebuildTrigger.py -O rebuildTrigger.py"
                         def list = sh returnStdout: true, script: "python rebuildTrigger.py --repo /data/dragonwell${params.RELEASE}"
                         for (hash in list) {
+                            print "let me retrigger ${hash} see what happens"
                             /*
                             http://ci.dragonwell-jdk.io/job/github-trigger-pipelines/job/dragonwell17-github-commit-trigger/buildWithParameters?token=asnb
                             */
