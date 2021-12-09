@@ -46,7 +46,7 @@ if __name__ == "__main__":
     for path in paths:
         repo_dir = os.path.join(args.repo, path)
         repo = git.Repo(repo_dir)
-        if (args.fromtag is not None):
+        if (args.fromtag is None):
             revstr = "master"
         else:
             revstr = "{}...master".format(args.fromtag)
