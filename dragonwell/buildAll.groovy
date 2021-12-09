@@ -12,16 +12,24 @@ pipeline {
     }
     stages {
         stage('iterateHistory') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.OSS == true }
-            }
             agent {
                 label 'binaries'
             }
             steps {
                 script {
-
+                    dir("/data/dragonwell${params.RELEASE}") {
+                        sh "git pull origin"
+                        sh "wget http://ci.dragonwell-jdk.io/userContent/utils/rebuildTrigger.py -O rebuildTrigger.py"
+                        def list = sh returnStdout: true, script: "python rebuildTrigger.py --repo /data/dragonwell${params.RELEASE}"
+                        for (hash in list) {
+                            /*
+                            http://ci.dragonwell-jdk.io/job/github-trigger-pipelines/job/dragonwell17-github-commit-trigger/buildWithParameters?token=asnb
+                            */
+                            def jobUrl = "http://ci.dragonwell-jdk.io/job/github-trigger-pipelines/job/dragonwell${params.RELEASE}-github-commit-trigger/buildWithParameters?token=asnb"
+                            sh "curl ${jobUrl} --SCM ${hash}"
+                            sleep 10
+                        }
+                    }
                 }
             }
         }
