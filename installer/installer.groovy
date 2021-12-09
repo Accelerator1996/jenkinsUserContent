@@ -269,7 +269,7 @@ pipeline {
                         print "fullversion is ${fullVersionOutput}"
                         def releasenots = sh(script: "cat Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md", returnStdout: true).trim()
                         if (!releasenots.contains("${params.VERSION}")) {
-                            print "更新 ${params.VERSION} 到 Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
+                            print "更新 ${params.VERSION} 到 Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md"
                             URL apiUrl = new URL("https://api.github.com/repos/alibaba/dragonwell${params.RELEASE}/releases")
                             def card = new JsonSlurper().parse(apiUrl)
                             def fromTag = ""
@@ -286,9 +286,9 @@ ${fullVersionOutput}
  ```
 ${gitLogReport}
 """ + releasenots
-                            writeFile file: "Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md", text: newReleasenotes
-                            sh "git add Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md"
-                            sh "git commit -m \" update Alibaba-Dragonwell-${params.RELEASE}-Release-Notes.md \""
+                            writeFile file: "Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md", text: newReleasenotes
+                            sh "git add Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md"
+                            sh "git commit -m \" update Alibaba-Dragonwell${slash}${params.RELEASE}-Release-Notes.md \""
                             sh "git push origin HEAD:master"
                             if (fileExists("阿里巴巴Dragonwell${params.RELEASE}发布说明.md")) {
                                 print "更新 ${params.VERSION} 到 发布说明中文版"
@@ -312,7 +312,7 @@ ${gitLogReport}
                         }
 
                         if (!dockerimages.contains("${tagName4Docker}")) {
-                            print "更新 ${tagName4Docker} 到 Use-Dragonwell-${params.RELEASE}-docker-images.md"
+                            print "更新 ${tagName4Docker} 到 Use-Dragonwell${slash}${params.RELEASE}-docker-images.md"
                             ArrayList l = new ArrayList(Arrays.asList(dockerimages.split("\n")))
                             for (int i = 0; i < l.size(); i++) {
                                 if (l.get(i).contains("---")) {
@@ -326,9 +326,9 @@ ${gitLogReport}
                                     break;
                                 }
                             }
-                            writeFile file: "Use-Dragonwell-${params.RELEASE}-docker-images.md", text: l.join("\n")
-                            sh "git add Use-Dragonwell-${params.RELEASE}-docker-images.md"
-                            sh "git commit -m \" update Use-Dragonwell-${params.RELEASE}-docker-images.md \""
+                            writeFile file: "Use-Dragonwell${slash}${params.RELEASE}-docker-images.md", text: l.join("\n")
+                            sh "git add Use-Dragonwell${slash}${params.RELEASE}-docker-images.md"
+                            sh "git commit -m \" update Use-Dragonwell${slash}${params.RELEASE}-docker-images.md \""
                             sh "git push origin HEAD:master"
                         }
                         print "更新OSS下载链接"
