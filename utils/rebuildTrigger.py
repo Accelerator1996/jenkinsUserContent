@@ -51,4 +51,5 @@ if __name__ == "__main__":
         else:
             revstr = "{}...master".format(args.fromtag)
         for commit in repo.iter_commits(rev=revstr):
-            print (commit.tree)
+            if re.match(r"\[(Misc|Wisp|GC|Backport|JFR|Runtime|Coroutine|Merge|JIT|RAS|JWarmUp|JWarmUp)", commit.summary) != None:
+                print (commit.tree)
