@@ -20,7 +20,8 @@ pipeline {
                     dir("/data/dragonwell${params.RELEASE}") {
                         sh "git pull origin"
                         sh "wget http://ci.dragonwell-jdk.io/userContent/utils/rebuildTrigger.py -O rebuildTrigger.py"
-                        def list = sh returnStdout: true, script: "python rebuildTrigger.py --repo /data/dragonwell${params.RELEASE}".split("\\n+")
+                        def raw = sh returnStdout: true, script: "python rebuildTrigger.py --repo /data/dragonwell${params.RELEASE}"
+                        def list = raw.split("\\n+")
                         for (hash in list) {
                             print "let me retrigger ${hash} see what happens"
                             /*
