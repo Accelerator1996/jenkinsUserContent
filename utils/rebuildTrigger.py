@@ -47,7 +47,7 @@ if __name__ == "__main__":
         repo_dir = os.path.join(args.repo, path)
         repo = git.Repo(repo_dir)
         if (args.fromtag is not None):
-            revstr = "...master"
+            revstr = "master"
         else:
             revstr = "{}...master".format(args.fromtag)
         for commit in repo.iter_commits(rev=revstr):
