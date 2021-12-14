@@ -20,6 +20,10 @@ if (params.RELEASE == "17") {
     versionName4OSS = versionName4OSS.replace("+", "%2B")
 }
 
+@groovy.transform.Field def dockerUrl = ""
+@groovy.transform.Field def alpineUrl = ""
+@groovy.transform.Field def armUrl = ""
+@groovy.transform.Field def clean = true
 
 DOCKER_IMAGES_TEMPLATE1 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_x86_64 | x86_64 | centos | No |"
 DOCKER_IMAGES_TEMPLATE2 = "| registry.cn-hangzhou.aliyuncs.com/dragonwell/dragonwell:VERSION_aarch64 | aarch64 | centos | No |"
@@ -132,16 +136,12 @@ pipeline {
     }
     stages {
         stage('publishOssGithub') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.OSS == true }
-            }
             agent {
                 label 'ossworker'
             }
             steps {
                 script {
-                    if (params.CLEAN) {
+                    if (clean == true) {
                         sh "rm -rf /home/testuser/jenkins/workspace/dragonwell-oss-installer/workspace/target/"
                         copyArtifacts(
                                 projectName: "build-scripts/openjdk${params.RELEASE}-pipeline",
@@ -171,14 +171,23 @@ pipeline {
                                     def releaseFile = "Alibaba_Dragonwell_${params.VERSION}_${platform}.${tailPattern}"
                                     sh "mv ${file} ${releaseFile}"
                                     sh "${OSS_TOOL} cp -f ${releaseFile} oss://dragonwell/${params.VERSION}/${releaseFile}"
+                                    def releaseUrl = "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                     print "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                     RELEASE_MAP["${releaseFile}"] = "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                 } else if (checksum.matches()) {
                                     def releaseFile = "Alibaba_Dragonwell_${params.VERSION}_${platform}.${tailPattern}.sha256.txt"
                                     sh "mv ${file} ${releaseFile}"
                                     sh "${OSS_TOOL} cp -f ${releaseFile} oss://dragonwell/${params.VERSION}/${releaseFile}"
+                                    def releaseUrl = "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                     print "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
                                     CHECKSUM_MAP["${releaseFile}"] = "https://dragonwell.oss-cn-shanghai.aliyuncs.com/${params.VERSION}/${releaseFile}"
+                                }
+                                if (releaseFile.matches("*windows*")) {
+                                  dockerUrl = releaseUrl
+                                } else if (releaseFile.matches("*alpine*")) {
+                                  alpineUrl = releaseUrl
+                                } else if (releaseFile.matches("*aarch64*")) {
+                                  armUrl = releaseUrl
                                 }
                             }
                         }
@@ -210,35 +219,27 @@ pipeline {
             }
         }
         stage('publishDocker-x64') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.DOCKER == true }
-            }
             agent {
                 label 'docker:x64'
             }
             steps {
                 script {
                     sh "docker login"
-                    def url = "${params.DOCKER_URL}"
-                    def urlAlpine = "${params.DOCKER_ALPINE_URL}"
+                    def url = dockerUrl
+                    def urlAlpine = alpineUrl
                     sh "wget ${BUILDER} -O build.sh"
                     sh "sh build.sh ${url} ${tagName4Docker} ${urlAlpine}"
                 }
             }
         }
         stage('publishDocker-aarch64') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.DOCKER == true }
-            }
             agent {
                 label 'docker:aarch64'
             }
             steps {
                 script {
                     sh "docker login"
-                    def url = "${params.DOCKER_ARM_URL}"
+                    def url = armUrl
                     def urlAlpine = ""
                     sh "wget ${BUILDER} -O build.sh"
                     sh "sh build.sh ${url} ${tagName4Docker} ${urlAlpine}"
@@ -247,10 +248,6 @@ pipeline {
         }
 
         stage('wiki-update') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.WIKI == true }
-            }
             agent {
                 label 'ossworker'
             }
